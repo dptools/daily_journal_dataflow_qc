@@ -148,6 +148,8 @@ for p in *; do
 	if [[ $new_audio_count == 0 ]]; then
 		echo "${p} has not submitted any new audio journals since last processing time, continuing to next subject"
 		echo ""
+		cd ..
+		rm -rf temp_audio
 		cd "$data_root"/PROTECTED/"$site"/raw # return to top before continuing
 		continue
 	fi
