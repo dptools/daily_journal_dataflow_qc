@@ -36,7 +36,7 @@ def audio_diary_qc(data_root, site, subject, db_cutoff=None, length_cutoff=None)
 	# max and min of the flatness were never really informative, so just reporting the mean
 	mean_flats=[]
 	pt_consents=[] # for getting a sense in GENERAL of participant enrollment time without fully revealing dates in DPDash
-	if db_cutoff not None and length_cutoff not None:
+	if db_cutoff is not None and length_cutoff is not None:
 		headers.append("audio_approved_bool")
 		audio_bools = []
 		# audio would be rejected because file failed to load, db or duration not above cutoff amount, or second+ submission from same pt day
@@ -115,7 +115,7 @@ def audio_diary_qc(data_root, site, subject, db_cutoff=None, length_cutoff=None)
 			lengths.append(np.nan)
 			db.append(np.nan)
 			mean_flats.append(np.nan)
-			if db_cutoff not None and length_cutoff not None:
+			if db_cutoff is not None and length_cutoff is not None:
 				audio_bools.append(0)
 			continue 
 
@@ -128,7 +128,7 @@ def audio_diary_qc(data_root, site, subject, db_cutoff=None, length_cutoff=None)
 			lengths.append(np.nan)
 			db.append(np.nan)
 			mean_flats.append(np.nan)
-			if db_cutoff not None and length_cutoff not None:
+			if db_cutoff is not None and length_cutoff is not None:
 				audio_bools.append(0)
 			continue
 		
@@ -156,7 +156,7 @@ def audio_diary_qc(data_root, site, subject, db_cutoff=None, length_cutoff=None)
 		mean_flats.append(round(np.mean(spec_flat),4))
 
 		# finally add transcript push approval column info when needed
-		if db_cutoff not None and length_cutoff not None:
+		if db_cutoff is not None and length_cutoff is not None:
 			if vol < db_cutoff or sec < length_cutoff or cur_num > 1:
 				print("WARNING: " + filename + " rejected by audio QC script (db=" + str(db) + ", seconds=" + str(sec) + ", number=" + str(cur_num) + ")")
 				audio_bools.append(0)
@@ -170,7 +170,7 @@ def audio_diary_qc(data_root, site, subject, db_cutoff=None, length_cutoff=None)
 
 	# construct current CSV
 	values = [ref_times, site_days, times, week_days, sites, subjects, sub_nums, sub_hours, lengths, db, mean_flats, pt_consents]
-	if db_cutoff not None and length_cutoff not None:
+	if db_cutoff is not None and length_cutoff is not None:
 		values.append(audio_bools)
 	new_csv = pd.DataFrame()
 	for i in range(len(headers)):
@@ -190,7 +190,7 @@ def audio_diary_qc(data_root, site, subject, db_cutoff=None, length_cutoff=None)
 	final_save.to_csv(source_path,index=False)
 
 	# now that main audio QC stats CSV has been updated, move files if audio selection included
-	if db_cutoff not None and length_cutoff not None:
+	if db_cutoff is not None and length_cutoff is not None:
 		for audio_name,approval in zip(wav_files,audio_bools):
 			if approval == 1:
 				os.rename(os.path.join("temp_audio",audio_name),os.path.join("audio_to_send",audio_name))

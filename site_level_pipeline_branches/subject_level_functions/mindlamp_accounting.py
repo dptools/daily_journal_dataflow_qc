@@ -17,6 +17,7 @@ def mindlamp_json_accounting(data_root, site, subject, assumed_timezone, assumed
 		patient_metadata = study_metadata[study_metadata["Subject ID"] == subject]
 		consent_date_str = patient_metadata["Consent"].tolist()[0]
 		consent_date = datetime.datetime.strptime(consent_date_str,"%Y-%m-%d")
+		consent_date = pytz.timezone(assumed_timezone).localize(consent_date)
 	except:
 		# occasionally we encounter issues with the study metadata file, so adding a check here to skip processing if day number not calculable
 		# shouldn't really happen for AMPSCZ though based on the requirements Lochness enforces
@@ -106,7 +107,7 @@ def mindlamp_json_accounting(data_root, site, subject, assumed_timezone, assumed
 	basic_json_logs["diary_records_count"] = diary_count_list
 	basic_json_logs["ema_records_count"] = ema_count_list
 
-	mindlamp_dates = [x.split("_")[3] + "-" + x.split("_")[4] + "-" + x.split("_")[5] if len(x.split("_")==6) else np.nan for x in diary_root_filenames]
+	mindlamp_dates = [x.split("_")[3] + "-" + x.split("_")[4] + "-" + x.split("_")[5] if len(x.split("_"))==6 else np.nan for x in diary_root_filenames]
 	expected_absolute_paths = [os.path.join(data_root,"PROTECTED", site, "raw", subject, "phone", x + "_" + y.lower() + ".mp3") for x,y in zip(diary_root_filenames,sound_numbers)]
 	existence_boolean = [os.path.isfile(x) for x in expected_absolute_paths]
 	converted_times = [datetime.datetime.fromtimestamp(x/1000.0,tz=pytz.timezone(assumed_timezone)) for x in unix_timestamps]

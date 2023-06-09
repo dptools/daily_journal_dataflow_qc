@@ -8,9 +8,13 @@ if [[ -z "${1}" ]]; then
 fi
 configs_path=$1
 
+# get path this script is in to find repo root
+full_path=$(realpath $0)
+repo_root=$(dirname $full_path)
+
 # run audio side code for each config
-for file in configs_path/*.sh; do
-	bash site_level_pipeline_branches/audio_side.sh "$file"
+for file in "$configs_path"/*.sh; do
+	bash "$repo_root"/site_level_pipeline_branches/audio_side.sh "$file"
 	# add spacing for when monitoring logs in real time
 	echo ""
 	echo ""
@@ -18,8 +22,8 @@ for file in configs_path/*.sh; do
 done
 
 # run transcript side code for each config
-for file in configs_path/*.sh; do
-	bash site_level_pipeline_branches/transcript_side.sh "$file"
+for file in "$configs_path"/*.sh; do
+	bash "$repo_root"/site_level_pipeline_branches/transcript_side.sh "$file"
 	# add spacing for when monitoring logs in real time
 	echo ""
 	echo ""

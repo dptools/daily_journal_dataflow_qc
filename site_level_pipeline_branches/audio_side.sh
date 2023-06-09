@@ -157,7 +157,7 @@ for p in *; do
 	echo "Current time: ${now}"
 	for file in TODO+*.txt; do
 		# get raw path from filename, get processed path from file contents, convert it to wav in correct location (temp for now), rename txt file to remove TODO once that is confirmed
-		cur_raw_file=$(echo "$file" | awk -F 'ODO+' '{print $2}') 
+		cur_raw_file=$(echo "$file" | awk -F 'ODO[+]' '{print $2}') 
 		cur_raw_name=$(echo "$cur_raw_file" | awk -F '.txt' '{print $1}') 
 		raw_mp3_name="$cur_raw_name".mp3
 		input_path="$data_root"/PROTECTED/"$site"/raw/"$p"/phone/"$raw_mp3_name"
@@ -224,6 +224,12 @@ for p in *; do
 		cd "$data_root"/PROTECTED/"$site"/raw # return to top before continuing
 		continue
 	fi
+
+	# remove this when confirmed to look okay
+	echo "skipping transcribeme send for first test"
+	echo ""
+	cd "$data_root"/PROTECTED/"$site"/raw
+	continue
 
 	if [ $auto_send_on = "Y" ] || [ $auto_send_on = "y" ]; then
 		# if needed still, create a folder to put audios that have been sent to TranscribeMe, and are waiting on result
