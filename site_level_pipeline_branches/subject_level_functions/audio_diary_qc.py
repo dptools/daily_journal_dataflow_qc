@@ -150,7 +150,7 @@ def audio_diary_qc(data_root, site, subject, db_cutoff=None, length_cutoff=None)
 
 		# get other audio props
 		gain = np.sqrt(np.mean(np.square(data)))
-		vol = round(20 * np.log10(vol/ref_rms),2)
+		vol = round(20 * np.log10(gain/ref_rms),2)
 		db.append(vol)
 		spec_flat = librosa.feature.spectral_flatness(y=data)
 		mean_flats.append(round(np.mean(spec_flat),4))
