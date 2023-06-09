@@ -158,7 +158,7 @@ def audio_diary_qc(data_root, site, subject, db_cutoff=None, length_cutoff=None)
 		# finally add transcript push approval column info when needed
 		if db_cutoff is not None and length_cutoff is not None:
 			if vol < db_cutoff or sec < length_cutoff or cur_num > 1:
-				print("WARNING: " + filename + " rejected by audio QC script (db=" + str(db) + ", seconds=" + str(sec) + ", number=" + str(cur_num) + ")")
+				print("WARNING: " + filename + " rejected by audio QC script (db=" + str(vol) + ", seconds=" + str(sec) + ", number=" + str(cur_num) + ")")
 				audio_bools.append(0)
 			else:
 				audio_bools.append(1)
