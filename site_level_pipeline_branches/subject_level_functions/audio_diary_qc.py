@@ -217,7 +217,10 @@ def audio_diary_qc(data_root, site, subject, db_cutoff=None, length_cutoff=None)
 if __name__ == '__main__':
 	# Map command line arguments to function arguments.
 	try:
-		audio_diary_qc(sys.argv[1], sys.argv[2], sys.argv[3], db_cutoff=sys.argv[4], length_cutoff=sys.argv[5])
+		db_cutoff=sys.argv[4]
+		length_cutoff=sys.argv[5]
 	except:
-		audio_diary_qc(sys.argv[1], sys.argv[2], sys.argv[3])
+		db_cutoff=None
+		length_cutoff=None
+	audio_diary_qc(sys.argv[1], sys.argv[2], sys.argv[3], db_cutoff=db_cutoff, length_cutoff=length_cutoff)
 
