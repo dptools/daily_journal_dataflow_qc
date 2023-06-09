@@ -225,12 +225,6 @@ for p in *; do
 		continue
 	fi
 
-	# remove this when confirmed to look okay
-	echo "skipping transcribeme send for first test"
-	echo ""
-	cd "$data_root"/PROTECTED/"$site"/raw
-	continue
-
 	if [ $auto_send_on = "Y" ] || [ $auto_send_on = "y" ]; then
 		# if needed still, create a folder to put audios that have been sent to TranscribeMe, and are waiting on result
 		if [[ ! -d pending_audio ]]; then
