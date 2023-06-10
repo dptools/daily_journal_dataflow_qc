@@ -108,7 +108,9 @@ for p in *; do
 		echo "Starting TranscribeMe pull attempt for subject ${p} as pending audios were detected"
 		now=$(date +"%T")
 		echo "Current time: ${now}"
+
 		python "$func_root"/journal_transcribeme_sftp_pull.py "$data_root" "$site" "$p" "$transcribeme_username" "$transcribeme_password" "$transcription_language"
+		
 		echo "TranscribeMe SFTP pull attempts complete for subject ${p}"
 		now=$(date +"%T")
 		echo "Current time: ${now}"
@@ -116,8 +118,162 @@ for p in *; do
 		echo "No audio journals currently pending transcription for ${p}, will now check if any existing transcripts require further processing"
 	fi
 
-	# TODO implement rest of steps - can do this in parallel to starting to get transcripts back from TranscribeMe though
-	echo "Transcript processing steps not yet implemented - will run for all pulled transcripts on future iteration"
+	# now move on to processing any transcripts available
+	cd transcripts
+	# first confirm there are some transcripts available
+	if [ -z "$(ls -A *.txt 2> /dev/null)" ]; then 
+		echo "${p} has no transcript text files available yet, continuing to next subject"
+		echo ""
+		cd "$data_root"/PROTECTED/"$site"/processed # back out of folder before skipping over pt
+		continue
+	fi
+
+	# make redacted copies of the transcript text files for any not done yet
+	# maintain in PROTECTED processed for file safety reasons (small size anyway)
+	# but will copy redacted versions to GENERAL downstream
+	echo "Making redacted copies of any new transcripts for ${p}, using TranscribeMe's {PII} marking convention"
+	now=$(date +"%T")
+	echo "Current time: ${now}"
+
+	if [[ ! -d redacted_copies ]]; then
+		mkdir redacted_copies
+		# in addition to going under redacted_copies, they will be named [name]_REDACTED.txt
+		# - for later copy to GENERAL transcripts folder
+	fi
+	# note this python function runs on subject level to make redacted copy for any that don't have it yet 
+	# - unlike the per file version used for AMPSCZ interview pipeline
+	python "$func_root"/phone_transcript_redaction.py "$data_root" "$site" "$p"
+
+	# csv conversion of newly redacted transcripts
+	echo "Converting any new redacted transcript texts for ${p} to CSV"
+	now=$(date +"%T")
+	echo "Current time: ${now}"
+
+	cd redacted_copies
+	if [[ ! -d csv ]]; then
+		mkdir csv
+	fi
+	
+	# just do CSV part within the pipeline wrapper here
+	for file in *.txt; do	
+		name=$(echo "$file" | awk -F '.txt' '{print $1}')
+		[[ -e csv/"${name}".csv ]] && continue # if already have a formatted copy skip
+		echo "New transcript to convert detected: ${file}"
+		
+		# begin conversion for this applicable file
+		# check encoding type - and force at least UTF8
+		typecheck=$(file -n "$file" | grep ASCII | wc -l)
+		if [[ $typecheck == 0 ]]; then
+			# ASCII is subset of UTF8, so now need to check UTF8 since we know it isn't ASCII
+			iconv -f utf8 "$file" -t utf8 -o /dev/null
+			if [ $? = 0 ]; then # if exit code of above command is 0, the file is UTF8, otherwise not
+				# if it's not ASCII but is UTF8, just make a note
+				echo "(note transcript is not ASCII encoded, but is UTF-8)"
+			else
+				# if it isn't UTF8 we have a problem, completely skip it 
+				echo "WARNING: found transcript that is not UTF-8 encoded, this may cause issues with the automatic redaction! It will be completely skipped for now, please review in main transcripts folder manually"
+				# now remove the file from redacted copies to be safe in case marked PII was not removed due to encoding discrepancy
+				rm "$file" 
+				# then skip to the next transcript
+				continue 
+			fi			
+		fi
+		# now good to continue
+
+		# substitute tabs with single space for easier parsing (returned by TranscribeMe we see a mix)
+		# this file will be kept only temporarily
+		sed 's/\t/ /g' "$file" > "$name"_noTABS.txt
+
+		# prep CSV with column headers
+		# (no reason to have DPDash formatting for a transcript CSV, so I choose these columns)
+		# (some of them are just for ease of future concat/merge operations)
+		echo "site,subject,filename,speakerID,timefromstart,text" > csv/"$name".csv
+
+		# check speaker ID number format, as TranscribeMe has used a few different delimiters in the past
+		# (this does assume they are consistent with one format throughout a single file though, which should be fine)
+		subcheck=$(cat "$file" | grep S1: | wc -l) # speaker ID S1 is guaranteed to appear at least once as it is the initial ID they assign 
+
+		# read in transcript line by line to convert to CSV rows
+		while IFS='' read -r line || [[ -n "$line" ]]; do
+			if [[ $subcheck == 0 ]]; then # speaker ID always comes first, is sometimes followed by a colon
+				sub=$(echo "$line" | awk -F ' ' '{print $1}') 
+			else
+				sub=$(echo "$line" | awk -F ': ' '{print $1}')
+			fi
+			time=$(echo "$line" | awk -F ' ' '{print $2}') # timestamp always comes second
+			text=$(echo "$line" | awk -F '[0-9][0-9]:[0-9][0-9].[0-9][0-9][0-9] ' '{print $2}') # get text based on what comes after timestamp in expected format (MM:SS.milliseconds)
+			# the above still works fine if hours are also provided, it just hinges on full minute digits and millisecond resolution being provided throughout the transcript
+			if [[ -z "$text" ]]; then
+				# text variable could end up empty because ms resolution not provided, so first try a different way of splitting, looking for space after the SS part of the timestamp
+				text=$(echo "$line" | awk -F '[0-9][0-9]:[0-9][0-9] ' '{print $2}')
+				if [[ -z "$text" ]]; then
+					# if text is still empty safe to assume this is an empty line, which do occur - skip it!
+					continue
+				fi
+			fi
+			text=$(echo "$text" | tr -d '"') # remove extra characters at end of each sentence
+			text=$(echo "$text" | tr -d '\r') # remove extra characters at end of each sentence
+			echo "${site},${p},${name},${sub},${time},\"${text}\"" >> csv/"$name".csv # add the line to CSV
+		done < "$name"_noTABS.txt
+
+		# remove the temporary file
+		rm "$name"_noTABS.txt
+	done
+
+	echo "New CSV conversion for ${p} done"
+	now=$(date +"%T")
+	echo "Current time: ${now}"
+	cd .. # return to main transcripts folder
+
+	# now proceed with transcript QC 
+	# - no folders to make for this actually as can use what was already created for audio side
+	# (fair to assume audio side must have been run to get to this point for subject anyway)
+	echo "Updating transcript QC for subject ${p}"
+	now=$(date +"%T")
+	echo "Current time: ${now}"
+
+	python "$func_root"/transcript_diary_qc.py "$data_root" "$site" "$p"
+
+	echo "Transcript QC for new ${p} data done - moving on to final early processing step (basic per sentence stats for expanded transcript CSVs)"
+	now=$(date +"%T")
+	echo "Current time: ${now}"
+
+	if [[ ! -d redacted_csvs_with_stats ]]; then
+		mkdir redacted_csvs_with_stats
+	fi
+
+	python "$func_root"/phone_transcript_sentence_stats.py "$data_root" "$site" "$p"
+
+	echo "Transcript sentences check for new ${p} data done - will now do final file management, sending copies of new shareable transcripts to GENERAL side"
+	now=$(date +"%T")
+	echo "Current time: ${now}"
+
+	# setup folders in GENERAL if needed
+	if [[ ! -d ${data_root}/GENERAL/${site}/processed/${p}/phone/audio_journals/transcripts ]]; then
+		mkdir "$data_root"/GENERAL/"$site"/processed/"$p"/phone/audio_journals/transcripts
+	fi
+	if [[ ! -d ${data_root}/GENERAL/${site}/processed/${p}/phone/audio_journals/transcripts/csvs_with_per_sentence_stats ]]; then
+		mkdir "$data_root"/GENERAL/"$site"/processed/"$p"/phone/audio_journals/transcripts/csvs_with_per_sentence_stats
+	fi
+
+	# first copy over the redacted txts as needed
+	cd redacted_copies
+	for file in *.txt; do
+		if [[ ! -e ${data_root}/GENERAL/${site}/processed/${p}/phone/audio_journals/transcripts/"$file" ]]; then
+			cp "$file" "$data_root"/GENERAL/"$site"/processed/"$p"/phone/audio_journals/transcripts/"$file"
+			echo "Copied new redacted transcript ${file} to GENERAL processed for downstream transfer"
+		fi
+	done
+
+	# now copy over the CSVs with the sentence-level counts as needed
+	cd ../redacted_csvs_with_stats
+	for file in *.csv; do
+		if [[ ! -e ${data_root}/GENERAL/${site}/processed/${p}/phone/audio_journals/transcripts/csvs_with_per_sentence_stats/"$file" ]]; then
+			cp "$file" "$data_root"/GENERAL/"$site"/processed/"$p"/phone/audio_journals/transcripts/csvs_with_per_sentence_stats/"$file"
+		fi
+	done
+
+	echo "Updated transfers done for ${p}"
 	
 	cd "$data_root"/PROTECTED/"$site"/processed # at end of loop go back to start spot
 	echo "${p} has completed new diary transcript processing!"

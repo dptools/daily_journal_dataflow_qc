@@ -56,6 +56,18 @@ def audio_diary_qc(data_root, site, subject, db_cutoff=None, length_cutoff=None)
 		print("WARNING: haven't converted any new audio files yet for input subject " + subject)
 		return
 
+	# need output folders setup before proceeding as well - again this is just check for someone calling outside the scope of main pipeline
+	if not os.path.isdir(os.path.join(data_root,"PROTECTED", site, "processed", subject, "phone", "audio_journals", "dpdash_source_csvs")):
+		print("WARNING: output folders not correctly set up yet for input subject " + subject + " - please address in order to save audio QC outputs")
+		return
+	if db_cutoff is not None and length_cutoff is not None:
+		if not os.path.isdir(os.path.join(data_root,"PROTECTED", site, "processed", subject, "phone", "audio_journals", "audio_to_send")):
+			print("WARNING: output folders not correctly set up yet for input subject " + subject + " - please address in order to save audio QC outputs")
+			return
+		if not os.path.isdir(os.path.join(data_root,"PROTECTED", site, "processed", subject, "phone", "audio_journals", "rejected_audio")):
+			print("WARNING: output folders not correctly set up yet for input subject " + subject + " - please address in order to save audio QC outputs")
+			return
+
 	# next will prep to get additional info from accounting JSON 
 	# - not strictly necessary for python script but should always exist in context of broader pipeline
 	if not os.path.isfile(os.path.join(data_root,"PROTECTED", site, "processed", subject, "phone", "audio_journals", "file_accounting_details", site + "_" + subject + "_audioJournalJSONRecordsInfo.csv")):
