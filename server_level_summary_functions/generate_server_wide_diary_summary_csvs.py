@@ -60,13 +60,13 @@ def diary_csv_summarize(data_root, output_folder):
 	json_combined["diary_day_bool"] = json_combined["diary_records_count"].clip(upper=1)
 	json_combined["active_day_bool"] = (json_combined["ema_day_bool"] + json_combined["diary_day_bool"]).clip(upper=1)
 	grouping_rename = {"active_day_bool":"num_days_any_activity_submit","ema_day_bool":"num_days_ema_submit","diary_day_bool":"num_days_journal_submit"}
-	subject_id_json = json_combined[["subject","active_day_bool","ema_day_bool","diary_day_bool"]].groupby(["subject"]).sum().reset_index(drop=True)
+	subject_id_json = json_combined[["subject","active_day_bool","ema_day_bool","diary_day_bool"]].groupby("subject", as_index=False).sum().reset_index(drop=True)
 	subject_id_json.rename(columns=grouping_rename,inplace=True)
 	sites_json = subject_id_json.merge(json_combined[["subject","site"]].drop_duplicates(),on="subject",how="left")
 	sites_json["any_activity_bool"] = sites_json["num_days_any_activity_submit"].clip(upper=1)
 	sites_json["any_ema_bool"] = sites_json["num_days_ema_submit"].clip(upper=1)
 	sites_json["any_diary_bool"] = sites_json["num_days_journal_submit"].clip(upper=1)
-	sites_json_group = sites_json[["site","any_activity_bool","any_ema_bool","any_diary_bool"]].groupby(["site"]).sum().reset_index(drop=True)
+	sites_json_group = sites_json[["site","any_activity_bool","any_ema_bool","any_diary_bool"]].groupby("site", as_index=False).sum().reset_index(drop=True)
 	site_grouping_rename = {"any_activity_bool":"num_subjects_any_active_app","any_ema_bool":"num_subjects_any_ema","any_diary_bool":"num_subjects_any_journal"}
 	sites_json_group.rename(columns=site_grouping_rename,inplace=True)
 	site_prefix = sites_json_group["site"].tolist()[0][:-2]
@@ -95,12 +95,12 @@ def diary_csv_summarize(data_root, output_folder):
 	combined_subject_counts = basic_server_df.merge(sites_json_group,on="site",how="outer").fillna(0)
 
 	# on subjects and site level, add count and duration sum of audio uploaded to TranscribeMe
-	site_durs = processed_combined[["site","length_minutes"]].groupby(["site"]).sum().reset_index(drop=True).rename(columns={"length_minutes":"sum_minutes_audio_uploaded"})
-	site_counts = processed_combined[["site","length_minutes"]].groupby(["site"]).count().reset_index(drop=True).rename(columns={"length_minutes":"num_audio_files_uploaded"})
+	site_durs = processed_combined[["site","length_minutes"]].groupby("site", as_index=False).sum().reset_index(drop=True).rename(columns={"length_minutes":"sum_minutes_audio_uploaded"})
+	site_counts = processed_combined[["site","length_minutes"]].groupby("site", as_index=False).count().reset_index(drop=True).rename(columns={"length_minutes":"num_audio_files_uploaded"})
 	site_stats_combo = site_durs.merge(site_counts,on="site",how="inner").reset_index(drop=True)
 	site_stats_combo_meta = combined_subject_counts.merge(site_stats_combo,on="site",how="outer").reset_index(drop=True)
-	subject_durs = processed_combined[["subject","length_minutes"]].groupby(["subject"]).sum().reset_index(drop=True).rename(columns={"length_minutes":"sum_minutes_audio_uploaded"})
-	subject_counts = processed_combined[["subject","length_minutes"]].groupby(["subject"]).count().reset_index(drop=True).rename(columns={"length_minutes":"num_audio_files_uploaded"})
+	subject_durs = processed_combined[["subject","length_minutes"]].groupby("subject", as_index=False).sum().reset_index(drop=True).rename(columns={"length_minutes":"sum_minutes_audio_uploaded"})
+	subject_counts = processed_combined[["subject","length_minutes"]].groupby("subject", as_index=False).count().reset_index(drop=True).rename(columns={"length_minutes":"num_audio_files_uploaded"})
 	subject_stats_combo = subject_durs.merge(subject_counts,on="subject",how="inner").reset_index(drop=True)
 	subject_stats_combo_meta = subject_id_json.merge(subject_stats_combo,on="subject",how="outer").reset_index(drop=True)
 
@@ -128,7 +128,7 @@ def diary_csv_summarize(data_root, output_folder):
 	subject_stats_add_time["time_since_last_submit"] = subject_stats_add_time["study_day_at_compute_time"] - subject_stats_add_time["last_submit_day"]
 	subject_stats_add_time["recent_two_weeks_submit_bool"] = [1 if x <= 14 else 0 for x in subject_stats_add_time["time_since_last_submit"].tolist()]
 	subject_stats_add_time["site"] = [site_prefix + x[0:2] for x in subject_stats_add_time["subject"].tolist()]
-	site_new_subjects_count = subject_stats_add_time[["site","first_two_weeks_bool","past_two_weeks_bool","past_two_weeks_submit_bool","recent_two_weeks_submit_bool"]].groupby("site").sum().reset_index(drop=True)
+	site_new_subjects_count = subject_stats_add_time[["site","first_two_weeks_bool","past_two_weeks_bool","past_two_weeks_submit_bool","recent_two_weeks_submit_bool"]].groupby("site", as_index=False).sum().reset_index(drop=True)
 	time_group_rename = {"first_two_weeks_bool":"num_subjects_within_first_two_weeks_of_enrollment","recent_two_weeks_submit_bool":"num_subjects_submit_within_last_two_weeks"}
 	site_new_subjects_count.rename(columns=time_group_rename,inplace=True)
 	site_new_subjects_count["fraction_diary_subjects_submit_after_two_weeks"] = site_new_subjects_count["past_two_weeks_submit_bool"]/site_new_subjects_count.past_two_weeks_bool.astype(float)
@@ -138,17 +138,17 @@ def diary_csv_summarize(data_root, output_folder):
 
 	post_2week = processed_combined[processed_combined["day"]>14].dropna(subset=["day","subject","site","length_minutes"],how="any")
 	pre_2week = processed_combined[processed_combined["day"]<=14].dropna(subset=["day","subject","site","length_minutes"],how="any")
-	post_2_week_mins = post_2week[["site","length_minutes"]].groupby("site").mean().reset_index(drop=True).rename(columns={"length_minutes":"mean_minutes_per_diary_after_two_weeks"})
-	pre_2_week_mins = pre_2week[["site","length_minutes"]].groupby("site").mean().reset_index(drop=True).rename(columns={"length_minutes":"mean_minutes_per_diary_first_two_weeks"})
+	post_2_week_mins = post_2week[["site","length_minutes"]].groupby("site", as_index=False).mean().reset_index(drop=True).rename(columns={"length_minutes":"mean_minutes_per_diary_after_two_weeks"})
+	pre_2_week_mins = pre_2week[["site","length_minutes"]].groupby("site", as_index=False).mean().reset_index(drop=True).rename(columns={"length_minutes":"mean_minutes_per_diary_first_two_weeks"})
 	get_week_assign = subject_stats_add_time[["subject","study_day_at_compute_time"]]
 	get_week_assign["week_assign"] = [math.ceil(x/7.0) - 2 for x in get_week_assign["study_day_at_compute_time"].tolist()]
-	post_2_week_counts = post_2week[["site","length_minutes"]].groupby("site").count().reset_index(drop=True).rename(columns={"length_minutes":"num_diary_after_two_weeks"})
+	post_2_week_counts = post_2week[["site","length_minutes"]].groupby("site", as_index=False).count().reset_index(drop=True).rename(columns={"length_minutes":"num_diary_after_two_weeks"})
 	num_weeks_valid_subjects = post_2week.merge(get_week_assign[["subject","week_assign"]],on="subject",how="left").drop_duplicates(subset=["subject"])
-	num_weeks_merger = num_weeks_valid_subjects[["site","week_assign"]].groupby("site").sum().reset_index(drop=True).rename(columns={"week_assign":"num_weeks_so_far"})
+	num_weeks_merger = num_weeks_valid_subjects[["site","week_assign"]].groupby("site", as_index=False).sum().reset_index(drop=True).rename(columns={"week_assign":"num_weeks_so_far"})
 	post_2_weeks_rate = post_2_week_counts.merge(num_weeks_merger,on="site",how="inner").reset_index(drop=True)
 	post_2_weeks_rate["mean_accepted_diaries_per_subject_week_after_two_weeks"] = post_2_weeks_rate["num_diary_after_two_weeks"]/post_2_weeks_rate.num_weeks_so_far.astype(float)
-	pre_2_week_subjects_avail = pre_2week[["site","subject"]].groupby("site").nunique().reset_index(drop=True).rename(columns={"subject":"subject_count"})
-	pre_2_week_diaries_avail = pre_2week[["site","subject"]].groupby("site").count().reset_index(drop=True).rename(columns={"subject":"diary_count"})
+	pre_2_week_subjects_avail = pre_2week[["site","subject"]].groupby("site", as_index=False).nunique().reset_index(drop=True).rename(columns={"subject":"subject_count"})
+	pre_2_week_diaries_avail = pre_2week[["site","subject"]].groupby("site", as_index=False).count().reset_index(drop=True).rename(columns={"subject":"diary_count"})
 	pre_2_weeks_rate = pre_2_week_subjects_avail.merge(pre_2_week_diaries_avail, on="site", how="inner").reset_index(drop=True)
 	pre_2_weeks_rate["mean_accepted_diaries_per_subject_within_first_two_weeks"] = pre_2_weeks_rate["diary_count"]/pre_2_weeks_rate.subject_count.astype(float)
 	site_stats_add_time_post = site_stats_add_time_int.merge(post_2_week_mins,on="site",how="left").merge(post_2_weeks_rate[["site","mean_accepted_diaries_per_subject_week_after_two_weeks"]],on="site",how="left").reset_index(drop=True)

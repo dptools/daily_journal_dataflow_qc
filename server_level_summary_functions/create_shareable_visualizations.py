@@ -94,7 +94,7 @@ def diary_monitoring_visuals(source_folder):
 		# (just exclude sites with no transcript data yet - won't make at all if none do, no need to print extra warning since already did)
 		if len(qc_feat_list) > 2:
 			# note this may fail eventually if more than 30 subjects for a site start having journal data, would have to tweak approach
-			fine_feat_list = ["length_minutes", "total_sentence_count", "word_count", "inaudible_rate"]
+			fine_feat_list = ["length_minutes", "total_sentence_count", "word_count", "inaudible_rate_per_word"]
 			fine_bin_list = [[0.0,0.1,0.25,0.5,0.75,1.0,1.5,2.0,3.0,4.0], 15, 30, rate_bin_list]
 
 			sites_list_trans = list(set(combined_qc.dropna(subset=["word_count"])["site"].tolist()))
@@ -705,7 +705,7 @@ def get_timecourse_dfs_helper(subject_qc_inp,combined_qc_inp):
 	possible_subjects_per_day = pd.DataFrame()
 	possible_subjects_per_day["day"] = list(range(1,days_avail[0]+1))
 	possible_subjects_per_day["subject_count"] = counting_list
-	total_diaries_per_study_day = combined_qc_inp[["day","subject"]].dropna(how="any").groupby("day").count().reset_index(drop=True).rename(columns={"subject":"diaries_count"})
+	total_diaries_per_study_day = combined_qc_inp[["day","subject"]].dropna(how="any").groupby("day",as_index=False).count().reset_index(drop=True).rename(columns={"subject":"diaries_count"})
 	diary_accounting = possible_subjects_per_day.merge(total_diaries_per_study_day,on="day",how="outer").fillna(0).reset_index(drop=True)
 	diary_accounting_check = diary_accounting[diary_accounting["subject_count"]>0]
 	if not diary_accounting_check.equals(diary_accounting):

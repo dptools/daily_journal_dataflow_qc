@@ -33,7 +33,7 @@ conda activate audio_process
 #	or add new permissions-related or high level folder structure commands at beginning as needed)
 
 # first call main wrapper that executes full pipeline using all available site-level configs
-bash "$repo_path"/run_full_pipeline_all_sites.sh "$configs_path"
+#bash "$repo_path"/run_full_pipeline_all_sites.sh "$configs_path"
 
 # now call the server-wide summary function portion using needed arguments, when it is applicable
 if [[ ${daily_testing_mode} == 1 ]]; then
