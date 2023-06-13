@@ -14,7 +14,7 @@ def transcript_diary_qc(data_root, site, subject):
 	# specify column headers that will be used for every CSV
 	# make it DPDash formatted, but will leave reftime columns blank. others will look up
 	headers=["reftime","day","timeofday","weekday","site","subject","daily_submission_number",
-			 "speakerID_count","S1_sentence_count"."total_sentence_count","word_count",
+			 "speakerID_count","S1_sentence_count","total_sentence_count","word_count",
 			 "min_words_in_sen","max_words_in_sen","inaudible_count","questionable_count",
 			 "other_bracketed_notation_count","redacted_count",
 			 "final_timestamp_minutes","min_timestamp_space_seconds","max_timestamp_space_seconds",

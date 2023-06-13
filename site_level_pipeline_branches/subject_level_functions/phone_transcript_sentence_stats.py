@@ -4,6 +4,8 @@ import os
 import glob
 import sys
 import re
+import pandas as pd 
+import numpy as np
 
 # for input subject, find any newly produced redacted transcript CSVs and generate a CSV version that includes some basic stats for each sentence
 # csv production mainly done by below helper function so could be run in more modular fashion if desired
@@ -216,6 +218,8 @@ def transcript_sentence_stats(filename, savepath, audio_duration=None):
 
 	cur_trans.to_csv(savepath, index=False)
 	return cur_trans
+
+	# Note this (and overall transcript QC) do not take into account differences for non-English languages yet
 
 if __name__ == '__main__':
 	# Map command line arguments to function arguments.
