@@ -68,7 +68,7 @@ def diary_csv_summarize(data_root, output_folder):
 	sites_json["any_diary_bool"] = sites_json["num_days_journal_submit"].clip_upper(1)
 	sites_json_group = sites_json[["site","any_activity_bool","any_ema_bool","any_diary_bool"]].groupby(["site"]).sum().reset_index(drop=True)
 	site_grouping_rename = {"any_activity_bool":"num_subjects_any_active_app","any_ema_bool":"num_subjects_any_ema","any_diary_bool":"num_subjects_any_journal"}
-	sites_json_group.rename(columns=site_grouping_rename,inplace=True)h
+	sites_json_group.rename(columns=site_grouping_rename,inplace=True)
 	site_prefix = sites_json_group["site"].tolist()[0][:-2]
 
 	# then for site-level summary, also get folder structure info to merge with site-level JSON summary

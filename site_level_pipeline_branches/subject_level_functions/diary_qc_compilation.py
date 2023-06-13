@@ -100,7 +100,7 @@ def diary_qc_compilation(data_root, site, subject):
 		disfluencies = pd.DataFrame(columns=disfluencies_headers)
 	
 	# also make sure audio QC CSV was appropriately set up by pipeline, not run outside of scope with selection option disabled
-	if "audio_approved_bool" not in audio_rejected.columns:
+	if "audio_approved_bool" not in audio_qc.columns:
 		print("WARNING: audio QC not run with quality audio selection enabled, so nothing could have been rejected regardless of stats")
 		# with this missing it defeats purpose of this function, so going to exit
 		print("Skipping subject " + subject + " here then as no way to identify and merge stats for successful diaries only!")

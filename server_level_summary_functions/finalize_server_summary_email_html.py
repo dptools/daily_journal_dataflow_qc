@@ -5,7 +5,8 @@ import pandas as pd
 from datetime import date
 import sys
 
-# TODO
+# function set up to put together final HTML file with embedded data frame for site-level stats
+# (and context for images to be embedded by wrapping pipeline sendmail command)
 def diary_monitoring_html(source_folder,html_path):
 	# check given folder exists in order to change directories into it
 	try:
@@ -16,7 +17,7 @@ def diary_monitoring_html(source_folder,html_path):
 		return
 	# make sure savepath for html exists too
 	# (note should be an absolute path)
-	if not os.path.isfile(html_path):
+	if len(html_path.split("/"))>1 and not os.path.isdir(''.join(html_path.split("/")[:-1])):
 		# also should not be issue in actual pipeline
 		print("ERROR: given html_path invalid, please check function arguments")
 		return

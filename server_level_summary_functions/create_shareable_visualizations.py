@@ -694,7 +694,7 @@ def stacked_line_plots(input_df_list,error_bars=None):
 # but will allow easier set up of timecourses via df manipulation on site by site level
 # by taking input dfs that I can then call each time filtered by site above
 # specifically, want available subject count for each possibly study day to date, as well as actual count of diaries by day
-def get_timecourse_dfs_helper(subject_qc_inp,combined_qc_inp)
+def get_timecourse_dfs_helper(subject_qc_inp,combined_qc_inp):
 	days_avail = subject_qc_inp["study_day_at_compute_time"].tolist()
 	days_avail.sort(reverse=True)
 	counting_list = [0 for x in range(days_avail[0])]

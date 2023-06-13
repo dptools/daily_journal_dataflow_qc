@@ -170,7 +170,7 @@ for p in *; do
 	if [[ -d raw_file_tracking_system ]]; then
 		cd raw_file_tracking_system
 		for file in TODO*.txt; do
-			if [[ -z $file ]]; then
+			if [[ ! -e ${file} ]]; then
 				# ideally there will be none and will just skip over
 				continue
 			fi
@@ -183,7 +183,7 @@ for p in *; do
 		done
 		# now check normal completed ones to make sure downstream stuff exists as expected
 		for file in U*.txt; do
-			if [[ -z $file ]]; then
+			if [[ ! -e ${file} ]]; then
 				# in case no processing at all, though generally shouldn't hit this here
 				continue
 			fi
@@ -218,7 +218,7 @@ for p in *; do
 	if [[ -d transcripts ]]; then
 		cd transcripts
 		for file in *.txt; do
-			if [[ -z $file ]]; then
+			if [[ ! -e ${file} ]]; then
 				# make sure there actually are transcript txts
 				continue
 			fi
@@ -250,7 +250,7 @@ for p in *; do
 	if [[ -d completed_audio ]]; then
 		cd completed_audio
 		for file in *.wav; do
-			if [[ -z $file ]]; then
+			if [[ ! -e ${file} ]]; then
 				# make sure there actually are wavs
 				continue
 			fi

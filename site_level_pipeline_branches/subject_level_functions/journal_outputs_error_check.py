@@ -116,7 +116,7 @@ def finalize_diary_pipeline_error_logs(data_root, site, subject):
 						# for pending audio, while I already have stuff loaded in this loop can check for elapsed time potential issue
 						try:
 							cur_record_json = audio_json[(audio_json["assigned_study_day"]==cur_day)&(audio_json["adjusted_sound_number"]==cur_sub_num)]
-							cur_record_mp3 = audio_mp3[audio_mp3["found_mp3_name" == cur_record_json["matching_mp3_absolute_raw_path"].tolist()[0].split("/")[-1]]]
+							cur_record_mp3 = audio_mp3[audio_mp3["found_mp3_name"] == cur_record_json["matching_mp3_absolute_raw_path"].tolist()[0].split("/")[-1]]
 							detect_date_str = cur_record_mp3["date_first_detected"].tolist()[0]
 							detect_date = datetime.datetime.strptime(detect_date_str,"%Y-%m-%d")
 							elapsed_days = (cur_date - detect_date).days
