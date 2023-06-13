@@ -56,16 +56,16 @@ def diary_csv_summarize(data_root, output_folder):
 		df["site"] = [st for x in range(df.shape[0])]
 		df["subject"] = [pt for x in range(df.shape[0])]
 	json_combined = pd.concat(json_dfs).reset_index(drop=True)
-	json_combined["ema_day_bool"] = json_combined["ema_records_count"].clip_upper(1)
-	json_combined["diary_day_bool"] = json_combined["diary_records_count"].clip_upper(1)
-	json_combined["active_day_bool"] = (json_combined["ema_day_bool"] + json_combined["diary_day_bool"]).clip_upper(1)
+	json_combined["ema_day_bool"] = json_combined["ema_records_count"].clip(upper=1)
+	json_combined["diary_day_bool"] = json_combined["diary_records_count"].clip(upper=1)
+	json_combined["active_day_bool"] = (json_combined["ema_day_bool"] + json_combined["diary_day_bool"]).clip(upper=1)
 	grouping_rename = {"active_day_bool":"num_days_any_activity_submit","ema_day_bool":"num_days_ema_submit","diary_day_bool":"num_days_journal_submit"}
 	subject_id_json = json_combined[["subject","active_day_bool","ema_day_bool","diary_day_bool"]].groupby(["subject"]).sum().reset_index(drop=True)
 	subject_id_json.rename(columns=grouping_rename,inplace=True)
 	sites_json = subject_id_json.merge(json_combined[["subject","site"]].drop_duplicates(),on="subject",how="left")
-	sites_json["any_activity_bool"] = sites_json["num_days_any_activity_submit"].clip_upper(1)
-	sites_json["any_ema_bool"] = sites_json["num_days_ema_submit"].clip_upper(1)
-	sites_json["any_diary_bool"] = sites_json["num_days_journal_submit"].clip_upper(1)
+	sites_json["any_activity_bool"] = sites_json["num_days_any_activity_submit"].clip(upper=1)
+	sites_json["any_ema_bool"] = sites_json["num_days_ema_submit"].clip(upper=1)
+	sites_json["any_diary_bool"] = sites_json["num_days_journal_submit"].clip(upper=1)
 	sites_json_group = sites_json[["site","any_activity_bool","any_ema_bool","any_diary_bool"]].groupby(["site"]).sum().reset_index(drop=True)
 	site_grouping_rename = {"any_activity_bool":"num_subjects_any_active_app","any_ema_bool":"num_subjects_any_ema","any_diary_bool":"num_subjects_any_journal"}
 	sites_json_group.rename(columns=site_grouping_rename,inplace=True)

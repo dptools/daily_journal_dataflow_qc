@@ -70,11 +70,11 @@ def diary_monitoring_visuals(source_folder):
 			proceed=False
 		else:
 			# add the rate based features needed here
-			combined_qc["words_per_sentence"] = [x/float(y) if not np.isnan(x) else np.nan for x,y in zip(combined_qc["word_count","total_sentence_count"])]
-			combined_qc["inaudible_rate_per_word"] = [x/float(y) if not np.isnan(y) else np.nan for x,y in zip(combined_qc["inaudible_count","word_count"])]
-			combined_qc["questionable_rate_per_word"] = [x/float(y) if not np.isnan(y) else np.nan for x,y in zip(combined_qc["questionable_count","word_count"])]
-			combined_qc["other_brackets_rate_per_word"] = [x/float(y) if not np.isnan(y) else np.nan for x,y in zip(combined_qc["other_bracketed_notation_count","word_count"])]
-			combined_qc["redacted_rate_per_word"] = [x/float(y) if not np.isnan(y) else np.nan for x,y in zip(combined_qc["redacted_count","word_count"])]
+			combined_qc["words_per_sentence"] = [x/float(y) if not np.isnan(x) else np.nan for x,y in zip(combined_qc["word_count"].tolist(),combined_qc["total_sentence_count"].tolist())]
+			combined_qc["inaudible_rate_per_word"] = [x/float(y) if not np.isnan(y) else np.nan for x,y in zip(combined_qc["inaudible_count"].tolist(),combined_qc["word_count"].tolist())]
+			combined_qc["questionable_rate_per_word"] = [x/float(y) if not np.isnan(y) else np.nan for x,y in zip(combined_qc["questionable_count"].tolist(),combined_qc["word_count"].tolist())]
+			combined_qc["other_brackets_rate_per_word"] = [x/float(y) if not np.isnan(y) else np.nan for x,y in zip(combined_qc["other_bracketed_notation_count"].tolist(),combined_qc["word_count"].tolist())]
+			combined_qc["redacted_rate_per_word"] = [x/float(y) if not np.isnan(y) else np.nan for x,y in zip(combined_qc["redacted_count"].tolist(),combined_qc["word_count"].tolist())]
 
 			qc_feat_list = [["day", "submit_hour_int", "weekday", "length_minutes"],
 							["overall_db", "mean_flatness", "speakerID_count", "total_sentence_count"],
