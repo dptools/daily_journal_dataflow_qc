@@ -17,7 +17,7 @@ def diary_monitoring_html(source_folder,html_path):
 		return
 	# make sure savepath for html exists too
 	# (note should be an absolute path)
-	if len(html_path.split("/"))>1 and not os.path.isdir(''.join(html_path.split("/")[:-1])):
+	if len(html_path.split("/"))>1 and not os.path.isdir('/'.join(html_path.split("/")[:-1])):
 		# also should not be issue in actual pipeline
 		print("ERROR: given html_path invalid, please check function arguments")
 		return

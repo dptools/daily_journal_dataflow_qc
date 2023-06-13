@@ -34,7 +34,7 @@ log_timestamp=`date +%s`
 exec >  >(tee -ia "$repo_root"/logs/"$site"/summary_process_logging_"$log_timestamp".txt)
 exec 2> >(tee -ia "$repo_root"/logs/"$site"/summary_process_logging_"$log_timestamp".txt >&2)
 
-cur_date=$(date +%Y%m%d) # formatted date for possible CSV logging
+cur_date=$(date +%Y-%m-%d) # formatted date for possible CSV logging
 
 # confirm highest level folder structure exists as it should for given site
 # (note it may not because of an issue or just because a planned site hasn't actually started enrolling yet - or if writing your own config, a settings issue)

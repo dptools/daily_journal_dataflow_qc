@@ -93,7 +93,7 @@ def diary_qc_compilation(data_root, site, subject):
 		print("WARNING: transcript QC failed to load for subject " + subject)
 		transcript_qc = pd.DataFrame(columns=transcript_qc_headers)
 	try:
-		disfluencies = pd.read_csv(os.path.join("dpdash_source_csvs", site + "_" + subject + "_" + "diaryDisfluenciesQC.csv"))
+		disfluencies = pd.read_csv(os.path.join("dpdash_source_csvs", site + "_" + subject + "_" + "diaryDisfluencies.csv"))
 	except:
 		# this may just be normal for subject early on (pending transcripts) - defer to errors log
 		print("WARNING: disfluencies CSV failed to load for subject " + subject)
@@ -171,13 +171,13 @@ def diary_qc_compilation(data_root, site, subject):
 
 	# now do a bit of cleanup, also involving sanity checks that really shouldn't trigger in pipeline
 	combined_all_filtered1 = combined_all.dropna(subset=["day","daily_submission_number"],how="any")
-	if combined_all_filtered1 != combined_all:
+	if not combined_all_filtered1.equals(combined_all):
 		print("WARNING: some unexpected empty day/submission number records found in final merged accepted diaries CSV for subject " + subject + " - dropping them here, but please manually review")
 	combined_all_filtered2 = combined_all_filtered1[combined_all_filtered1["daily_submission_number"]==1]
-	if combined_all_filtered2 != combined_all_filtered1:
+	if not combined_all_filtered2.equals(combined_all_filtered1):
 		print("WARNING: some unexpected non-first daily submission numbers found in final merged accepted diaries CSV for subject " + subject + " - dropping them here, but please manually review")
 	combined_all_filtered3 = combined_all_filtered2.drop_duplicates(subset=["day"])
-	if combined_all_filtered3 != combined_all_filtered2:
+	if not combined_all_filtered3.equals(combined_all_filtered2):
 		print("WARNING: some unexpected duplicate day numbers found in final merged accepted diaries CSV for subject " + subject + " - dropping them here, but please manually review")
 	combined_all_filtered3.sort_values(by="day",inplace=True)
 

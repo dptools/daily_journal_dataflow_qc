@@ -708,7 +708,7 @@ def get_timecourse_dfs_helper(subject_qc_inp,combined_qc_inp):
 	total_diaries_per_study_day = combined_qc_inp[["day","subject"]].dropna(how="any").groupby("day").count().reset_index(drop=True).rename(columns={"subject":"diaries_count"})
 	diary_accounting = possible_subjects_per_day.merge(total_diaries_per_study_day,on="day",how="outer").fillna(0).reset_index(drop=True)
 	diary_accounting_check = diary_accounting[diary_accounting["subject_count"]>0]
-	if diary_accounting_check != diary_accounting:
+	if not diary_accounting_check.equals(diary_accounting):
 		print("WARNING: count of subjects available per day does not line up with days available in the merged QC CSV, please review manually for accuracy")
 	diary_accounting_check["current_response_rate"] = diary_accounting_check["diaries_count"]/diary_accounting_check.subject_count.astype(float)
 	# also get rolling mean and stdev part
