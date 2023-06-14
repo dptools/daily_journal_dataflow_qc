@@ -36,7 +36,7 @@ def diary_monitoring_html(source_folder,html_path):
 				   "num_subjects_any_ema":"Subjects Submitting EMAs (>=1)",
 				   "num_subjects_any_journal":"Subjects Submitting Journals (>=1)",
 				   "num_subjects_submit_within_last_two_week":"Subjects Recording a Journal in Last 2 Weeks",
-				   "num_audio_files_uploaded":"Total Successful Audio Journal Submissions"
+				   "num_audio_files_uploaded":"Total Successful Audio Journal Submissions",
 				   "sum_minutes_audio_uploaded":"Sum Minutes Uploaded to TranscribeMe"}
 	df.rename(columns=rename_dict,inplace=True)
 	# remove sites that presumably haven't even had pipeline launched for them yet

@@ -186,7 +186,7 @@ def finalize_diary_pipeline_error_logs(data_root, site, subject):
 	if len(new_errors) > 0:
 		sites = [site for x in range(len(new_errors))]
 		subjects = [subject for x in range(len(new_errors))]
-		detect_dates = [cur_date for x in range(len(new_errors))]
+		detect_dates = [cur_date_str for x in range(len(new_errors))]
 
 		values = [detect_dates, sites, subjects, new_names, new_stages, new_errors]
 		
