@@ -122,7 +122,7 @@ def diary_monitoring_visuals(source_folder):
 	if os.path.isfile("serverWide_subjectsLevel_journalSubmissionSummary.csv"):
 		subject_qc = pd.read_csv("serverWide_subjectsLevel_journalSubmissionSummary.csv")
 		# remove subjects that haven't been involved with diaries here
-		subject_qc = subject_qc[subject_qc["num_days_diary_submit"]>0]
+		subject_qc = subject_qc[subject_qc["num_days_journal_submit"]>0]
 		# setup more readable site IDs for later legends
 		subject_qc["siteID"] = [x[-2:] for x in subject_qc["site"].tolist()]
 		# make sure the features that focus only on journals successfully uploaded to TranscribeMe are clearly marked
@@ -133,7 +133,7 @@ def diary_monitoring_visuals(source_folder):
 		subject_qc["months_since_consent"] = [math.floor(x/30.0) if not np.isnan(x) else np.nan for x in subject_qc["study_day_at_compute_time"].tolist()]
 
 		# now setup for histogram function input
-		subject_feats = [["num_days_ema_submit","num_days_diary_submit","num_audio_files_uploaded","sum_minutes_audio_uploaded"],
+		subject_feats = [["num_days_ema_submit","num_days_journal_submit","num_audio_files_uploaded","sum_minutes_audio_uploaded"],
 						 ["first_accepted_submit_day","last_accepted_submit_day","time_since_last_accepted_submit","months_since_consent"]]
 		count_bins = [0,8,15,22,29,43,58,86,114,174,235,300,365]
 		min_bins = 1.5*count_bins
