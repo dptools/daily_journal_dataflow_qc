@@ -257,7 +257,7 @@ def diary_monitoring_visuals(source_folder):
 	plt.savefig("serverWide_participationTimecourse.jpg") # for this one also saving as jpg for email attachment
 	# now repeat for individual sites, can use same site list as above scatter
 	for st in cur_site_list:
-		cur_subj_qc = subject_qc[subject_qc["siteID"]==st].dropna(subset=["day","subject"],how="any")		
+		cur_subj_qc = subject_qc[subject_qc["siteID"]==st].dropna(subset=["num_days_journal_submit","subject"],how="any")		
 		cur_comb_qc = combined_qc[combined_qc["siteID"]==st].dropna(subset=["day","subject"],how="any")
 		if cur_subj_qc.empty or cur_comb_qc.empty:
 			print("WARNING: site " + st + " has entries in combined QC CSV but no actual valid QC rows and/or subject-level stats")

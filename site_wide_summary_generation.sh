@@ -128,6 +128,7 @@ if [[ ! -e summary_body.html ]]; then
 else
 	sendmail_subject="${server_name} Weekly Journals Data Summary"
 	(
+		echo EOT
 		echo To: "$summary_email_list"
 		echo From: "$summary_from"
 		echo Subject: "$sendmail_subject"
@@ -166,6 +167,7 @@ else
 		echo "\$(base64 serverWide_keyQCHistogram.jpg)"
 		echo 
 		echo "--XYZ--"
+		echo EOT
 	) | sendmail -t -N "failure,delay,success"
 	# from address will also relieve a delivery status notification about this email each week
 fi
