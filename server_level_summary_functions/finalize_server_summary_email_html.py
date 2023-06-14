@@ -54,10 +54,20 @@ def diary_monitoring_html(source_folder,html_path,css_style_path):
 	df_html2 = df[df_col_list2].to_html(index=False)
 
 	# start setting up HTML and embed tables with desired style
-	if os.path.isfile(css_style_path):
-		start = "<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=ISO-8859-15\"><style>h3 {text-align: center;}</style></head><body class=\"rendered_html\"> <link rel=\"stylesheet\" type=\"text/css\" href=\"" + css_style_path + "\">"  
-	else:
-		start = "<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=ISO-8859-15\"><style>h3 {text-align: center;}</style></head><body class=\"rendered_html\"> <link rel=\"stylesheet\" href=\"https://cdn.jupyter.org/notebook/5.1.0/style/style.min.css\">"  
+	try:
+		if os.path.isfile(css_style_path):
+			start = "<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=ISO-8859-15\"><style>h3 {text-align: center;}</style></head><body class=\"rendered_html\"> <style type=\"text/css\">"  
+			with open(css_style_path, 'r') as cur_f:
+				css = cur_f.read()
+			start_close = "</style>"
+		else:
+			start = "<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=ISO-8859-15\"><style>h3 {text-align: center;}</style></head><body class=\"rendered_html\"> <link rel=\"stylesheet\" href=\"https://cdn.jupyter.org/notebook/5.1.0/style/style.min.css\">" 
+			css = ""
+			start_close = "" 
+	except:
+		start = "<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=ISO-8859-15\"><style>h3 {text-align: center;}</style></head><body class=\"rendered_html\"> <link rel=\"stylesheet\" href=\"https://cdn.jupyter.org/notebook/5.1.0/style/style.min.css\">" 
+		css = ""
+		start_close = "" 
 	df_render1 = "<h3>" + df_header1 + "</h3>" + df_html1  
 	df_render2 = "<h3>" + df_header2 + "</h3>" + df_html2 
 
@@ -74,6 +84,8 @@ def diary_monitoring_html(source_folder,html_path,css_style_path):
 	# now actually write out full well-formatted HTML file using above components
 	with open(html_path, 'w') as f:
 		f.write(start)
+		f.write(css)
+		f.write(start_close)
 		f.write(df_render1)
 		f.write("<br>") # add spacing between sections
 		f.write(df_render2)
