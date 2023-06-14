@@ -697,13 +697,13 @@ def stacked_line_plots(input_df_list,error_bars=None):
 def get_timecourse_dfs_helper(subject_qc_inp,combined_qc_inp):
 	days_avail = subject_qc_inp["study_day_at_compute_time"].tolist()
 	days_avail.sort(reverse=True)
-	counting_list = [0 for x in range(days_avail[0])]
+	counting_list = [0 for x in range(int(days_avail[0]))]
 	for d in days_avail:
 		counting_list[:d] = [x + 1 for x in counting_list[:d]]
 	if counting_list[0] != subject_qc_inp.shape[0]:
 		print("WARNING: count of subjects available per day does not line up with total diary-submitting subject count, please review manually for accuracy")
 	possible_subjects_per_day = pd.DataFrame()
-	possible_subjects_per_day["day"] = list(range(1,days_avail[0]+1))
+	possible_subjects_per_day["day"] = list(range(1,int(days_avail[0])+1))
 	possible_subjects_per_day["subject_count"] = counting_list
 	total_diaries_per_study_day = combined_qc_inp[["day","subject"]].dropna(how="any").groupby("day",as_index=False).count().reset_index(drop=True).rename(columns={"subject":"diaries_count"})
 	diary_accounting = possible_subjects_per_day.merge(total_diaries_per_study_day,on="day",how="outer").fillna(0).reset_index(drop=True)
