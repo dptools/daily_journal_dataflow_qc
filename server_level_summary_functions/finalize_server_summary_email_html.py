@@ -54,9 +54,10 @@ def diary_monitoring_html(source_folder,html_path,css_style_path):
 	df_html2 = df[df_col_list2].to_html(index=False)
 
 	# start setting up HTML and embed tables with desired style
-	start = "<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=ISO-8859-15\"><style>h3 {text-align: center;}</style><style>"
-	# table style will be inserted from CSS input path in between these if possible
-	body_start = "</style></head><body class=\"rendered_html\"> " 
+	if os.path.isfile(css_style_path):
+		start = "<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=ISO-8859-15\"><style>h3 {text-align: center;}</style></head><body class=\"rendered_html\"> <link rel=\"stylesheet\" type=\"text/css\" href=\"" + css_style_path + "\">"  
+	else:
+		start = "<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=ISO-8859-15\"><style>h3 {text-align: center;}</style></head><body class=\"rendered_html\"> <link rel=\"stylesheet\" href=\"https://cdn.jupyter.org/notebook/5.1.0/style/style.min.css\">"  
 	df_render1 = "<h3>" + df_header1 + "</h3>" + df_html1  
 	df_render2 = "<h3>" + df_header2 + "</h3>" + df_html2 
 
@@ -73,12 +74,6 @@ def diary_monitoring_html(source_folder,html_path,css_style_path):
 	# now actually write out full well-formatted HTML file using above components
 	with open(html_path, 'w') as f:
 		f.write(start)
-		try:
-			with open(css_style_path, 'r') as css:
-				f.write(css.read())
-		except:
-			print("WARNING: CSS style file path not found, table styling will not be embedded")
-		f.write(body_start)
 		f.write(df_render1)
 		f.write("<br>") # add spacing between sections
 		f.write(df_render2)
