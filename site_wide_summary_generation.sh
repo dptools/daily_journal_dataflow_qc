@@ -127,49 +127,45 @@ if [[ ! -e summary_body.html ]]; then
 	echo "(not sending summary email this time then)"
 else
 	sendmail_subject="${server_name} Weekly Journals Data Summary"
-	(
-		echo EOT
-		echo To: "$summary_email_list"
-		echo From: "$summary_from"
-		echo Subject: "$sendmail_subject"
-		echo "MIME-Version: 1.0"
-		echo "Content-Type: multipart/related;\"boundary=XYZ\""
-		echo
-		echo "--XYZ"
-		echo "Content-Type: text/html; charset=ISO-8859-15"
-		echo "Content-Transfer-Encoding: 7bit"
-		echo 
-		cat summary_body.html
-		echo
-		echo
-		echo "--XYZ"
-		echo "Content-Type: image/jpeg;name=\"serverWide_subjectsCountDurationScatter.jpg\""
-		echo "Content-Transfer-Encoding: base64"
-		echo "Content-ID: <part1.06090408.01060107>"
-		echo "Content-Disposition: inline; filename=\"serverWide_subjectsCountDurationScatter.jpg\""
-		echo 
-		echo "\$(base64 serverWide_subjectsCountDurationScatter.jpg)"
-		echo 
-		echo "--XYZ"
-		echo "Content-Type: image/jpeg;name=\"serverWide_participationTimecourse.jpg\""
-		echo "Content-Transfer-Encoding: base64"
-		echo "Content-ID: <part2.06090408.01060107>"
-		echo "Content-Disposition: inline; filename=\"serverWide_participationTimecourse.jpg\""
-		echo 
-		echo "\$(base64 serverWide_participationTimecourse.jpg)"
-		echo 
-		echo "--XYZ"
-		echo "Content-Type: image/jpeg;name=\"serverWide_keyQCHistogram.jpg\""
-		echo "Content-Transfer-Encoding: base64"
-		echo "Content-ID: <part3.06090408.01060107>"
-		echo "Content-Disposition: inline; filename=\"serverWide_keyQCHistogram.jpg\""
-		echo 
-		echo "\$(base64 serverWide_keyQCHistogram.jpg)"
-		echo 
-		echo "--XYZ--"
-		echo EOT
-	) | sendmail -t -N "failure,delay,success"
-	# from address will also relieve a delivery status notification about this email each week
+	sendmail -t <<EOT
+	To: ${summary_email_list}
+	From: ${summary_from}
+	Subject: ${sendmail_subject}
+	MIME-Version: 1.0
+	Content-Type: multipart/related;boundary="XYZ"
+
+	--XYZ
+	Content-Type: text/html; charset=ISO-8859-15
+	Content-Transfer-Encoding: 7bit
+
+	$(cat summary_body.html)
+
+	--XYZ
+	Content-Type: image/jpeg;name="serverWide_subjectsCountDurationScatter.jpg"
+	Content-Transfer-Encoding: base64
+	Content-ID: <part1.06090408.01060107>
+	Content-Disposition: inline; filename="serverWide_subjectsCountDurationScatter.jpg"
+	
+	$(base64 serverWide_subjectsCountDurationScatter.jpg)
+	
+	--XYZ
+	Content-Type: image/jpeg;name="serverWide_participationTimecourse.jpg"
+	Content-Transfer-Encoding: base64
+	Content-ID: <part2.06090408.01060107>
+	Content-Disposition: inline; filename="serverWide_participationTimecourse.jpg"
+
+	$(base64 serverWide_participationTimecourse.jpg)
+
+	--XYZ
+	Content-Type: image/jpeg;name="serverWide_keyQCHistogram.jpg"
+	Content-Transfer-Encoding: base64
+	Content-ID: <part3.06090408.01060107>
+	Content-Disposition: inline; filename="serverWide_keyQCHistogram.jpg"
+
+	$(base64 serverWide_keyQCHistogram.jpg)
+
+	--XYZ--
+	EOT
 fi
 
 # now ready to prep attachments email
