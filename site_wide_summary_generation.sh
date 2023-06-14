@@ -128,7 +128,7 @@ if [[ ! -e summary_body.html ]]; then
 	exit
 fi
 
-sendmail_subject="${server_name} Weekly Journals Data Summary"
+sendmail_subject="${server_name} Weekly Journals Data Summary - ${cur_date}" 
 sendmail -t <<EOT
 To: ${summary_email_list}
 From: ${summary_from}
@@ -254,7 +254,7 @@ else
 	echo "Note there is no participation timecourses PDF for diaries on this server at present"
 fi
 
-mailx_subject="${server_name} Weekly Journals Monitoring Status Details"
+mailx_subject="${server_name} Weekly Journals Monitoring Status Details - ${cur_date}"
 echo "" > dummy.txt # can't have attachments and email body actually print at once with the -A version of mailx, so just forget email body
 mailx -s "$mailx_subject" "${attachments_flag_list[@]}" "$detailed_email_list" < dummy.txt || echo "WARNING: problem sending ${mailx_subject} to addresses ${detailed_email_list}" 
 rm dummy.txt

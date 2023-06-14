@@ -166,8 +166,8 @@ def diary_monitoring_visuals(source_folder):
 	# start with first page total count vs total duration per subject with months since consent hue
 	# (second figure below is just zoomed-in version to see better those with less excellent participation rates)
 	fig, axs = plt.subplots(figsize=(15,20), nrows=2, ncols=1)
-	sns.scatterplot(x="num_audio_files_uploaded",y="sum_minutes_audio_uploaded",hue="months_since_consent",palette="coolwarm",hue_norm=(0,12),data=subject_qc,ax=axs[0])
-	sns.scatterplot(x="num_audio_files_uploaded",y="sum_minutes_audio_uploaded",hue="months_since_consent",palette="coolwarm",hue_norm=(0,12),data=subject_qc,ax=axs[1])
+	sns.scatterplot(x="num_audio_files_uploaded",y="sum_minutes_audio_uploaded",hue="months_since_consent",palette="coolwarm",hue_norm=(0,12),data=subject_qc,s=10,ax=axs[0])
+	sns.scatterplot(x="num_audio_files_uploaded",y="sum_minutes_audio_uploaded",hue="months_since_consent",palette="coolwarm",hue_norm=(0,12),data=subject_qc,s=10,ax=axs[1])
 	axs[1].set_xlim(0,32)
 	axs[1].set_ylim(0,64)
 	for ax in axs:
@@ -183,8 +183,8 @@ def diary_monitoring_visuals(source_folder):
 	# now second page, will relate to day numbers for subject ID
 	# first and then last diary accepted day each versus gap since last diary, month since consent hue 
 	fig, axs = plt.subplots(figsize=(15,20), nrows=2, ncols=1)
-	sns.scatterplot(x="first_accepted_submit_day",y="time_since_last_accepted_submit",hue="months_since_consent",palette="coolwarm",hue_norm=(0,12),data=subject_qc,ax=axs[0])
-	sns.scatterplot(x="last_accepted_submit_day",y="time_since_last_accepted_submit",hue="months_since_consent",palette="coolwarm",hue_norm=(0,12),data=subject_qc,ax=axs[1])
+	sns.scatterplot(x="first_accepted_submit_day",y="time_since_last_accepted_submit",hue="months_since_consent",palette="coolwarm",hue_norm=(0,12),data=subject_qc,s=10,ax=axs[0])
+	sns.scatterplot(x="last_accepted_submit_day",y="time_since_last_accepted_submit",hue="months_since_consent",palette="coolwarm",hue_norm=(0,12),data=subject_qc,s=10,ax=axs[1])
 	for ax in axs:
 		ax.legend()
 		ax.set_title("Subject ID Timeline Stats Scatter (months since consent hue)")
