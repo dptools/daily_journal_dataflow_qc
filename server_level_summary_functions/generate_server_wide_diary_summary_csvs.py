@@ -140,7 +140,7 @@ def diary_csv_summarize(data_root, output_folder):
 	pre_2week = processed_combined[processed_combined["day"]<=14].dropna(subset=["day","subject","site","length_minutes"],how="any")
 	post_2_week_mins = post_2week[["site","length_minutes"]].groupby("site", as_index=False).mean().reset_index(drop=True).rename(columns={"length_minutes":"mean_minutes_per_diary_after_two_weeks"})
 	pre_2_week_mins = pre_2week[["site","length_minutes"]].groupby("site", as_index=False).mean().reset_index(drop=True).rename(columns={"length_minutes":"mean_minutes_per_diary_first_two_weeks"})
-	get_week_assign = subject_stats_add_time[["subject","study_day_at_compute_time"]]
+	get_week_assign = subject_stats_add_time[["subject","study_day_at_compute_time"]].dropna(how="any")
 	get_week_assign["week_assign"] = [math.ceil(x/7.0) - 2 for x in get_week_assign["study_day_at_compute_time"].tolist()]
 	post_2_week_counts = post_2week[["site","length_minutes"]].groupby("site", as_index=False).count().reset_index(drop=True).rename(columns={"length_minutes":"num_diary_after_two_weeks"})
 	num_weeks_valid_subjects = post_2week.merge(get_week_assign[["subject","week_assign"]],on="subject",how="left").drop_duplicates(subset=["subject"])

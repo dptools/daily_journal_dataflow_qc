@@ -181,63 +181,74 @@ if [[ $mail_attach != "A" ]]; then
 fi
 
 # (should) know this exists, otherwise major issues across whole server - so start attachment chain with it
-attachments_flag_list=("-${mail_attach} allSubjectsServerWide_successfulJournals_allQC_withMetadata.csv")
+attachments_flag_list=("-${mail_attach}" "allSubjectsServerWide_successfulJournals_allQC_withMetadata.csv")
 # then check for existence of other possible expected outputs to add them where possible (should generally exist)
 if [[ -e allSubjectsServerWide_audioQCRejectedJournals_dataLog.csv ]]; then
-	attachments_flag_list[${#attachments_flag_list[@]}]="-${mail_attach} allSubjectsServerWide_audioQCRejectedJournals_dataLog.csv"
+	attachments_flag_list[${#attachments_flag_list[@]}]="-${mail_attach}" 
+	attachments_flag_list[${#attachments_flag_list[@]}]="allSubjectsServerWide_audioQCRejectedJournals_dataLog.csv"
 else
 	echo "Note there is no QC-rejected audio list on this server at present"
 fi
 if [[ -e allSubjectsServerWide_audioJournalMajorIssuesLog.csv ]]; then
-	attachments_flag_list[${#attachments_flag_list[@]}]="-${mail_attach} allSubjectsServerWide_audioJournalMajorIssuesLog.csv"
+	attachments_flag_list[${#attachments_flag_list[@]}]="-${mail_attach}" 
+	attachments_flag_list[${#attachments_flag_list[@]}]="allSubjectsServerWide_audioJournalMajorIssuesLog.csv"
 else
 	echo "Note there is no major issues log for daily journals on this server at present"
 fi
 if [[ -e serverWide_subjectsLevel_journalSubmissionSummary.csv ]]; then
-	attachments_flag_list[${#attachments_flag_list[@]}]="-${mail_attach} serverWide_subjectsLevel_journalSubmissionSummary.csv"
+	attachments_flag_list[${#attachments_flag_list[@]}]="-${mail_attach}" 
+	attachments_flag_list[${#attachments_flag_list[@]}]="serverWide_subjectsLevel_journalSubmissionSummary.csv"
 else
 	echo "WARNING: no subject-level summary CSV has been generated, may signal issue with pipeline and will be missing from this email's attachments"
 fi
 if [[ -e serverWide_sitesLevel_journalSubmissionSummary.csv ]]; then
-	attachments_flag_list[${#attachments_flag_list[@]}]="-${mail_attach} serverWide_sitesLevel_journalSubmissionSummary.csv"
+	attachments_flag_list[${#attachments_flag_list[@]}]="-${mail_attach}" 
+	attachments_flag_list[${#attachments_flag_list[@]}]="serverWide_sitesLevel_journalSubmissionSummary.csv"
 else
 	echo "WARNING: no site-level summary CSV has been generated, may signal issue with pipeline and will be missing from this email's attachments"
 fi
 
 # similarly have visualization PDFs to check for
 if [[ -e allSubjectsServerWide_participationStatDistributions_coloredBySite.pdf ]]; then
-	attachments_flag_list[${#attachments_flag_list[@]}]="-${mail_attach} allSubjectsServerWide_participationStatDistributions_coloredBySite.pdf"
+	attachments_flag_list[${#attachments_flag_list[@]}]="-${mail_attach}" 
+	attachments_flag_list[${#attachments_flag_list[@]}]="allSubjectsServerWide_participationStatDistributions_coloredBySite.pdf"
 else
 	echo "WARNING: no diary participation histograms over subject IDs have been generated, may signal issue with pipeline and will be missing from this email's attachments"
 fi
 if [[ -e allDiariesServerWide_QCDistributions_coloredBySite.pdf ]]; then
-	attachments_flag_list[${#attachments_flag_list[@]}]="-${mail_attach} allDiariesServerWide_QCDistributions_coloredBySite.pdf"
+	attachments_flag_list[${#attachments_flag_list[@]}]="-${mail_attach}" 
+	attachments_flag_list[${#attachments_flag_list[@]}]="allDiariesServerWide_QCDistributions_coloredBySite.pdf"
 else
 	echo "WARNING: no diary QC histograms have been generated, may signal issue with pipeline and will be missing from this email's attachments"
 fi
 if [[ -e diariesBySiteServerWide_selectQCDistributions_coloredBySubject.pdf ]]; then
-	attachments_flag_list[${#attachments_flag_list[@]}]="-${mail_attach} diariesBySiteServerWide_selectQCDistributions_coloredBySubject.pdf"
+	attachments_flag_list[${#attachments_flag_list[@]}]="-${mail_attach}" 
+	attachments_flag_list[${#attachments_flag_list[@]}]="diariesBySiteServerWide_selectQCDistributions_coloredBySubject.pdf"
 else
 	# this won't be generated unless transcript data available, whereas above should really always exist even at very early stages
 	echo "Note there is no per site diaries QC histogram PDF on the server at present"
 fi
 if [[ -e allDiariesServerWide_disfluenciesDistributions.pdf ]]; then
-	attachments_flag_list[${#attachments_flag_list[@]}]="-${mail_attach} allDiariesServerWide_disfluenciesDistributions.pdf"
+	attachments_flag_list[${#attachments_flag_list[@]}]="-${mail_attach}" 
+	attachments_flag_list[${#attachments_flag_list[@]}]="allDiariesServerWide_disfluenciesDistributions.pdf"
 else
 	echo "Note there is no disfluencies distribution PDF for diaries on this server at present"
 fi
 if [[ -e serverWide_journalEngagementScatterPlots.pdf ]]; then
-	attachments_flag_list[${#attachments_flag_list[@]}]="-${mail_attach} serverWide_journalEngagementScatterPlots.pdf"
+	attachments_flag_list[${#attachments_flag_list[@]}]="-${mail_attach}" 
+	attachments_flag_list[${#attachments_flag_list[@]}]="serverWide_journalEngagementScatterPlots.pdf"
 else
 	echo "Note there is no server-wide scatterplots PDF for diaries on this server at present"
 fi
 if [[ -e perSiteBreakdown_journalEngagementScatterPlots.pdf ]]; then
-	attachments_flag_list[${#attachments_flag_list[@]}]="-${mail_attach} perSiteBreakdown_journalEngagementScatterPlots.pdf"
+	attachments_flag_list[${#attachments_flag_list[@]}]="-${mail_attach}" 
+	attachments_flag_list[${#attachments_flag_list[@]}]="perSiteBreakdown_journalEngagementScatterPlots.pdf"
 else
 	echo "Note there is no site-by-site scatterplots PDF for diaries on this server at present"
 fi
 if [[ -e serverWide_journalParticipationTimecourses.pdf ]]; then
-	attachments_flag_list[${#attachments_flag_list[@]}]="-${mail_attach} serverWide_journalParticipationTimecourses.pdf"
+	attachments_flag_list[${#attachments_flag_list[@]}]="-${mail_attach}" 
+	attachments_flag_list[${#attachments_flag_list[@]}]="serverWide_journalParticipationTimecourses.pdf"
 else
 	echo "Note there is no participation timecourses PDF for diaries on this server at present"
 fi
