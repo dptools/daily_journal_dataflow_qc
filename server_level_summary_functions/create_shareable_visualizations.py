@@ -136,7 +136,7 @@ def diary_monitoring_visuals(source_folder):
 		subject_feats = [["num_days_ema_submit","num_days_journal_submit","num_audio_files_uploaded","sum_minutes_audio_uploaded"],
 						 ["first_accepted_submit_day","last_accepted_submit_day","time_since_last_accepted_submit","months_since_consent"]]
 		count_bins = [0,8,15,22,29,43,58,86,114,174,235,300,365]
-		min_bins = 1.5*count_bins
+		min_bins = [x * 1.5 for x in count_bins]
 		min_bins.append(2.0*365)
 		min_bins.append(3.0*365)
 		first_day_bins = list(range(1,15))
