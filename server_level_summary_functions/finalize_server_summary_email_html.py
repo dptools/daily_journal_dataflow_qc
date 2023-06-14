@@ -7,7 +7,7 @@ import sys
 
 # function set up to put together final HTML file with embedded data frame for site-level stats
 # (and context for images to be embedded by wrapping pipeline sendmail command)
-def diary_monitoring_html(source_folder,html_path):
+def diary_monitoring_html(source_folder,html_path,css_style_path):
 	# check given folder exists in order to change directories into it
 	try:
 		os.chdir(source_folder)
@@ -30,6 +30,7 @@ def diary_monitoring_html(source_folder,html_path):
 		return
 
 	# clean up dataframe
+	df.dropna(how="any",inplace=True)
 	df["Site"] = [x[-2:] for x in df["site"].tolist()]
 	df["Subjects Submitting EMAs (>=1)"] = df["num_subjects_any_ema"].astype(int)
 	df["Subjects Submitting Journals (>=1)"] = df["num_subjects_any_journal"].astype(int)
@@ -53,7 +54,9 @@ def diary_monitoring_html(source_folder,html_path):
 	df_html2 = df[df_col_list2].to_html(index=False)
 
 	# start setting up HTML and embed tables with desired style
-	start = "<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=ISO-8859-15\"><style>h3 {text-align: center;}</style></head><body class=\"rendered_html\"> <link rel=\"stylesheet\" href=\"https://cdn.jupyter.org/notebook/5.1.0/style/style.min.css\">" 
+	start = "<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=ISO-8859-15\"><style>h3 {text-align: center;}</style><style>"
+	# table style will be inserted from CSS input path in between these if possible
+	body_start = "</style></head><body class=\"rendered_html\"> " 
 	df_render1 = "<h3>" + df_header1 + "</h3>" + df_html1  
 	df_render2 = "<h3>" + df_header2 + "</h3>" + df_html2 
 
@@ -62,14 +65,20 @@ def diary_monitoring_html(source_folder,html_path):
 	image_header1 = "Relationship Between Subject Submission Counts and Durations (as well as time in study so far)"
 	image_header2 = "Participation Rate Trends Over Time Enrolled in Study"
 	image_header3 = "Server-wide Distribution of Key QC Features (for diaries with returned transcripts)"
-	image_render1 = "<h3>" + image_header1 + "</h3> <img src=\"cid:part1.06090408.01060107\" alt=\"" + image_header1 + "\">"
-	image_render2 = "<h3>" + image_header2 + "</h3> <img src=\"cid:part2.06090408.01060107\" alt=\"" + image_header2 + "\">"
-	image_render3 = "<h3>" + image_header3 + "</h3> <img src=\"cid:part3.06090408.01060107\" alt=\"" + image_header3 + "\">"
+	image_render1 = "<h3>" + image_header1 + "</h3> <img src=\"cid:part1.06090408.01060107\" style=\"width:100%; height:auto; border:none;\" alt=\"" + image_header1 + "\">"
+	image_render2 = "<h3>" + image_header2 + "</h3> <img src=\"cid:part2.06090408.01060107\" style=\"width:100%; height:auto; border:none;\" alt=\"" + image_header2 + "\">"
+	image_render3 = "<h3>" + image_header3 + "</h3> <img src=\"cid:part3.06090408.01060107\" style=\"width:100%; height:auto; border:none;\" alt=\"" + image_header3 + "\">"
 	end="</body></html>"
 
 	# now actually write out full well-formatted HTML file using above components
 	with open(html_path, 'w') as f:
 		f.write(start)
+		try:
+			with open(css_style_path, 'r') as css:
+				f.write(css.read())
+		except:
+			print("WARNING: CSS style file path not found, table styling will not be embedded")
+		f.write(body_start)
 		f.write(df_render1)
 		f.write("<br>") # add spacing between sections
 		f.write(df_render2)
@@ -85,5 +94,5 @@ def diary_monitoring_html(source_folder,html_path):
 
 if __name__ == '__main__':
 	# Map command line arguments to function arguments.
-	diary_monitoring_html(sys.argv[1], sys.argv[2])
+	diary_monitoring_html(sys.argv[1], sys.argv[2], sys.argv[3])
 
