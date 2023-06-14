@@ -123,50 +123,50 @@ cd "$repo_root"/logs/TOTAL/"$cur_date"
 # going to just rely on embedded images to exist, otherwise part might be missing within email
 # will at least check for HTML first though
 if [[ ! -e summary_body.html ]]; then
-	echo "WARNING: no summary email body HTML generated, some issue with pipeline?"
-	echo "(not sending summary email this time then)"
-else
-	sendmail_subject="${server_name} Weekly Journals Data Summary"
-	sendmail -t <<EOT
-	To: ${summary_email_list}
-	From: ${summary_from}
-	Subject: ${sendmail_subject}
-	MIME-Version: 1.0
-	Content-Type: multipart/related;boundary="XYZ"
-
-	--XYZ
-	Content-Type: text/html; charset=ISO-8859-15
-	Content-Transfer-Encoding: 7bit
-
-	$(cat summary_body.html)
-
-	--XYZ
-	Content-Type: image/jpeg;name="serverWide_subjectsCountDurationScatter.jpg"
-	Content-Transfer-Encoding: base64
-	Content-ID: <part1.06090408.01060107>
-	Content-Disposition: inline; filename="serverWide_subjectsCountDurationScatter.jpg"
-	
-	$(base64 serverWide_subjectsCountDurationScatter.jpg)
-	
-	--XYZ
-	Content-Type: image/jpeg;name="serverWide_participationTimecourse.jpg"
-	Content-Transfer-Encoding: base64
-	Content-ID: <part2.06090408.01060107>
-	Content-Disposition: inline; filename="serverWide_participationTimecourse.jpg"
-
-	$(base64 serverWide_participationTimecourse.jpg)
-
-	--XYZ
-	Content-Type: image/jpeg;name="serverWide_keyQCHistogram.jpg"
-	Content-Transfer-Encoding: base64
-	Content-ID: <part3.06090408.01060107>
-	Content-Disposition: inline; filename="serverWide_keyQCHistogram.jpg"
-
-	$(base64 serverWide_keyQCHistogram.jpg)
-
-	--XYZ--
-	EOT
+	echo "WARNING: no summary email body HTML generated, some issue with pipeline? Exiting"
+	exit
 fi
+
+sendmail_subject="${server_name} Weekly Journals Data Summary"
+sendmail -t <<EOT
+To: ${summary_email_list}
+From: ${summary_from}
+Subject: ${sendmail_subject}
+MIME-Version: 1.0
+Content-Type: multipart/related;boundary="XYZ"
+
+--XYZ
+Content-Type: text/html; charset=ISO-8859-15
+Content-Transfer-Encoding: 7bit
+
+$(cat summary_body.html)
+
+--XYZ
+Content-Type: image/jpeg;name="serverWide_subjectsCountDurationScatter.jpg"
+Content-Transfer-Encoding: base64
+Content-ID: <part1.06090408.01060107>
+Content-Disposition: inline; filename="serverWide_subjectsCountDurationScatter.jpg"
+
+$(base64 serverWide_subjectsCountDurationScatter.jpg)
+
+--XYZ
+Content-Type: image/jpeg;name="serverWide_participationTimecourse.jpg"
+Content-Transfer-Encoding: base64
+Content-ID: <part2.06090408.01060107>
+Content-Disposition: inline; filename="serverWide_participationTimecourse.jpg"
+
+$(base64 serverWide_participationTimecourse.jpg)
+
+--XYZ
+Content-Type: image/jpeg;name="serverWide_keyQCHistogram.jpg"
+Content-Transfer-Encoding: base64
+Content-ID: <part3.06090408.01060107>
+Content-Disposition: inline; filename="serverWide_keyQCHistogram.jpg"
+
+$(base64 serverWide_keyQCHistogram.jpg)
+
+--XYZ--
+EOT
 
 # now ready to prep attachments email
 if [[ ! -e allSubjectsServerWide_successfulJournals_allQC_withMetadata.csv ]]; then
