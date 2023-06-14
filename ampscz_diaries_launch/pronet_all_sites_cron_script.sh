@@ -13,8 +13,7 @@ permissions_group_name=pronet
 data_root=/mnt/ProNET/Lochness/PHOENIX
 # part of settings are the list of addresses for two main types of email alerts
 # first list of addresses that will get high level summary email with embedded highlights
-basic_email="mennis@g.harvard.edu,mennis2@mgb.org" 
-#basic_email="mennis@g.harvard.edu,pwolff@emory.edu,JTBAKER@partners.org,ELIEBENTHAL@mclean.harvard.edu" 
+basic_email="mennis@g.harvard.edu,pwolff@emory.edu,JTBAKER@partners.org,ELIEBENTHAL@mclean.harvard.edu" 
 basic_email_from="mennis2@mgb.org" # sendmail supports easy from address specification
 # then list of addresses that will receive email with attachments that give much more detailed QC/accounting
 detailed_email="mennis2@mgb.org" 
@@ -34,7 +33,7 @@ conda activate audio_process
 #	or add new permissions-related or high level folder structure commands at beginning as needed)
 
 # first call main wrapper that executes full pipeline using all available site-level configs
-#bash "$repo_path"/run_full_pipeline_all_sites.sh "$configs_path"
+bash "$repo_path"/run_full_pipeline_all_sites.sh "$configs_path"
 
 # now call the server-wide summary function portion using needed arguments, when it is applicable
 if [[ ${daily_testing_mode} == 1 ]]; then
