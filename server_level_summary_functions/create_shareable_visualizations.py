@@ -177,6 +177,7 @@ def diary_monitoring_visuals(source_folder):
 	axs[0].set_title("Full Subject ID Participation Scatter (months since consent hue)")
 	axs[1].set_title("Zoomed-In Subject ID Participation Scatter (months since consent hue)")
 	fig.suptitle(cur_server + " Journal Count vs Total Duration by Subject, Colored with Enrollment Time")
+	fig.tight_layout(pad=2.0)
 	scatter_pdf.savefig()
 	plt.savefig("serverWide_subjectsCountDurationScatter.jpg") # for this one also saving as jpg for email attachment
 	# now second page, will relate to day numbers for subject ID
@@ -191,6 +192,7 @@ def diary_monitoring_visuals(source_folder):
 	axs[0].set_xlabel("Study Day of First Successful Audio Journal Submission")
 	axs[1].set_xlabel("Study Day of Last Successful Audio Journal Submission (as of " + cur_date + ")")
 	fig.suptitle(cur_server + " Submission Timepoint Info vs Latest Participation Gap (size in days) by Subject, Colored with Enrollment Time" + "\n" + "(top x = first study day with diary, bottom x = most recent study day with diary)")
+	fig.tight_layout(pad=2.0)
 	scatter_pdf.savefig()
 	# finally will do third page with some diary level dots for engagement info
 	# relative study day versus word count with weekday hue and then relative study day versus submit_hour_int with duration hue
@@ -205,6 +207,7 @@ def diary_monitoring_visuals(source_folder):
 	axs[1].set_title("Diary Submission Hour Over Time (recording duration hue)")
 	axs[1].set_ylabel("Submission Hour (timezone and social adjusted, floored integer)")
 	fig.suptitle(cur_server + " Submission Study Day vs Enagagement Metrics by Journal" + "\n" + "(data as of " + cur_date + ")")
+	fig.tight_layout(pad=2.0)
 	scatter_pdf.savefig()
 	# now done!
 	scatter_pdf.close()
@@ -231,6 +234,7 @@ def diary_monitoring_visuals(source_folder):
 		axs[0].set_title("[Site " + st + "] Submission Study Day vs Diary Durations, Colored by Subject ID")
 		axs[1].set_title("Server-wide Submission Study Day vs Diary Durations, Colored by Site (for reference)")
 		fig.suptitle(cur_server + st + "  Successful Diary Submission Durations Over Time" + "\n" + "(server-wide at bottom for reference, data as of " + cur_date + ")")
+		fig.tight_layout(pad=2.0)
 		scatter_sites_pdf.savefig()
 	# now done!
 	scatter_sites_pdf.close()
@@ -248,6 +252,7 @@ def diary_monitoring_visuals(source_folder):
 	axs[1].set_ylabel("Fraction (rolling mean with stdev error)")
 	axs[1].set_xlabel("Study Day")
 	fig.suptitle(cur_server + "Server-wide Participation Timecourse as of " + cur_date + "\n" + "(for each study day, considering subjects at or past that point with >=1 diary submit, and then counts of accepted diaries on that day)")
+	fig.tight_layout(pad=2.0,h_pad=0.5)
 	times_pdf.savefig()
 	plt.savefig("serverWide_participationTimecourse.jpg") # for this one also saving as jpg for email attachment
 	# now repeat for individual sites, can use same site list as above scatter
@@ -263,6 +268,7 @@ def diary_monitoring_visuals(source_folder):
 		axs[1].set_ylabel("Fraction (rolling mean with stdev error)")
 		axs[1].set_xlabel("Study Day (" + st + " only)" )
 		fig.suptitle(cur_server + st + "Site-specific Participation Timecourse as of " + cur_date + "\n" + "(for each study day, considering subjects at or past that point with >=1 diary submit, and then counts of accepted diaries on that day)")
+		fig.tight_layout(pad=2.0,h_pad=0.5)
 		times_pdf.savefig()
 	# now done!
 	times_pdf.close()
@@ -384,9 +390,9 @@ def stacked_histograms_with_labels(input_df,features_nested_list,pdf_savepath,di
 				cur_ax.legend()
 			else:
 				if n_bins is not None:
-					cur_ax.hist(sing_list, cur_bins, histtype="bar", orientation="horizontal")
+					cur_ax.hist(sing_list, cur_bins, histtype="bar", orientation="horizontal",edgecolor = "black")
 				else:
-					cur_ax.hist(sing_list, histtype="bar", orientation="horizontal")
+					cur_ax.hist(sing_list, histtype="bar", orientation="horizontal",edgecolor = "black")
 			
 			# add more labeling to panel
 			cur_ax.set_title(key_features[i])
