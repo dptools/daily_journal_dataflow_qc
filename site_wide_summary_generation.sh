@@ -165,6 +165,7 @@ else
 		echo 
 		echo "\$(base64 serverWide_keyQCHistogram.jpg)"
 		echo 
+		echo "--XYZ--"
 	) | sendmail -t -N "failure,delay,success"
 	# from address will also relieve a delivery status notification about this email each week
 fi

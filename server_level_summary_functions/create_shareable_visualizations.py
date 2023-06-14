@@ -379,11 +379,14 @@ def stacked_histograms_with_labels(input_df,features_nested_list,pdf_savepath,di
 					cur_n_output, cur_bins_output, cur_patches = cur_ax.hist(comb_list, cur_bins, histtype="bar", stacked=True, orientation="horizontal", label=available_categories, edgecolor = "black")
 				else:
 					cur_n_output, cur_bins_output, cur_patches = cur_ax.hist(comb_list, histtype="bar", stacked=True, orientation="horizontal", label=available_categories, edgecolor = "black")
-				for p in range(len(cur_patches)):
-					patch = cur_patches[p]
-					hatch = hatch_list[p]
-					for cur_bar in patch:
-						cur_bar.set(hatch = hatch)
+				try:
+					for p in range(len(cur_patches)):
+						patch = cur_patches[p]
+						hatch = hatch_list[p]
+						for cur_bar in patch:
+							cur_bar.set(hatch = hatch)
+				except:
+					pass # if only one category in divider will hit this, but obviously no need to hatch then
 				cur_ax.legend()
 			else:
 				if n_bins is not None:
@@ -549,11 +552,14 @@ def stacked_histograms_different_dfs(input_df_list,df_name_list,key_features,pdf
 					cur_n_output, cur_bins_output, cur_patches = cur_ax.hist(comb_list, cur_bins, histtype="bar", stacked=True, orientation="horizontal", label=available_categories, edgecolor = "black")
 				else:
 					cur_n_output, cur_bins_output, cur_patches = cur_ax.hist(comb_list, histtype="bar", stacked=True, orientation="horizontal", label=available_categories, edgecolor = "black")
-				for p in range(len(cur_patches)):
-					patch = cur_patches[p]
-					hatch = hatch_list[p]
-					for cur_bar in patch:
-						cur_bar.set(hatch = hatch)
+				try:
+					for p in range(len(cur_patches)):
+						patch = cur_patches[p]
+						hatch = hatch_list[p]
+						for cur_bar in patch:
+							cur_bar.set(hatch = hatch)
+				except:
+					pass # if only one category in divider will hit this, but obviously no need to hatch then
 				cur_ax.legend()
 			else:
 				if n_bins is not None:

@@ -87,7 +87,7 @@ def diary_csv_summarize(data_root, output_folder):
 		cur_sub_list_filter = [x for x in cur_sub_list if os.path.isdir(os.path.join(site,"raw",x)) and x[0:2] == site[-2:]]
 		num_subjects_total.append(len(cur_sub_list_filter))
 		cur_subs_raw_phone = glob.glob(site + "/raw/*/phone")
-		num_subjects_phone_protected.append(cur_subs_raw_phone)
+		num_subjects_phone_protected.append(len(cur_subs_raw_phone))
 	basic_server_df = pd.DataFrame()
 	basic_server_df["site"] = sites_list_filt
 	basic_server_df["num_subjects_found"] = num_subjects_total
