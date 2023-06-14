@@ -298,10 +298,11 @@ def stacked_histograms_with_labels(input_df,features_nested_list,pdf_savepath,di
 								   bin_specs=None,counted_object_name=None,plot_suptitle=None,jpeg_save_tuple=None):
 	# check that feature names are all fine and can find things in input_df okay
 	try:
-		for feat in feat_list in features_nested_list:
-			if feat not in input_df.columns:
-				print("ERROR: some specified features not actually found in input_df - exiting")
-				return
+		for feat_list in features_nested_list:
+			for feat in feat_list: 
+				if feat not in input_df.columns:
+					print("ERROR: some specified features not actually found in input_df - exiting")
+					return
 	except:
 		print("ERROR: formatting issue with either input_df or features_nested_list - exiting")
 		return
@@ -699,7 +700,7 @@ def get_timecourse_dfs_helper(subject_qc_inp,combined_qc_inp):
 	days_avail.sort(reverse=True)
 	counting_list = [0 for x in range(int(days_avail[0]))]
 	for d in days_avail:
-		counting_list[:d] = [x + 1 for x in counting_list[:d]]
+		counting_list[:int(d)] = [x + 1 for x in counting_list[:int(d)]]
 	if counting_list[0] != subject_qc_inp.shape[0]:
 		print("WARNING: count of subjects available per day does not line up with total diary-submitting subject count, please review manually for accuracy")
 	possible_subjects_per_day = pd.DataFrame()

@@ -140,6 +140,7 @@ else
 		echo 
 		cat summary_body.html
 		echo
+		echo
 		echo "--XYZ"
 		echo "Content-Type: image/jpeg;name=\"serverWide_subjectsCountDurationScatter.jpg\""
 		echo "Content-Transfer-Encoding: base64"
