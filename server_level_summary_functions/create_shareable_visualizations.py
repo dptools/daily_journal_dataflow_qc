@@ -82,7 +82,7 @@ def diary_monitoring_visuals(source_folder):
 							["inaudible_count", "questionable_count", "other_bracketed_notation_count", "redacted_count"],
 							["inaudible_rate_per_word", "questionable_rate_per_word", "other_brackets_rate_per_word", "redacted_rate_per_word"]]
 			rate_bin_list = [0,0.001,0.005,0.01,0.02,0.03,0.04,0.05]
-			qc_bins = [[list(range(1,365,14)),list(range(4,28)),list(range(1,8)),[0.0,0.1,0.25,0.5,0.75,1.0,1.5,2.0,3.0,4.0]],
+			qc_bins = [[list(range(1,365,14)),list(range(4,28)),list(range(1,9)),[0.0,0.1,0.25,0.5,0.75,1.0,1.5,2.0,3.0,4.0]],
 					   [[40,45,50,55,60,65,70,75,80,90,100],20,[1,2,3],15],
 					   [30,20,10,10],[10,10,10,10],[rate_bin_list,rate_bin_list,rate_bin_list,rate_bin_list]]
 			qc_title = cur_server + " Uploaded Audio Journal QC Metric Distributions by Site" + "\n" + "(Data as of " + cur_date + ")"
@@ -165,7 +165,7 @@ def diary_monitoring_visuals(source_folder):
 	scatter_pdf = PdfPages("serverWide_journalEngagementScatterPlots.pdf")
 	# start with first page total count vs total duration per subject with months since consent hue
 	# (second figure below is just zoomed-in version to see better those with less excellent participation rates)
-	fig, axs = plt.subplots(figsize=(15,20), nrows=1, ncols=2)
+	fig, axs = plt.subplots(figsize=(15,20), nrows=2, ncols=1)
 	sns.scatterplot(x="num_audio_files_uploaded",y="sum_minutes_audio_uploaded",hue="months_since_consent",palette="coolwarm",hue_norm=(0,12),data=subject_qc,ax=axs[0])
 	sns.scatterplot(x="num_audio_files_uploaded",y="sum_minutes_audio_uploaded",hue="months_since_consent",palette="coolwarm",hue_norm=(0,12),data=subject_qc,ax=axs[1])
 	axs[1].set_xlim(0,32)
@@ -177,12 +177,11 @@ def diary_monitoring_visuals(source_folder):
 	axs[0].set_title("Full Subject ID Participation Scatter (months since consent hue)")
 	axs[1].set_title("Zoomed-In Subject ID Participation Scatter (months since consent hue)")
 	fig.suptitle(cur_server + " Journal Count vs Total Duration by Subject, Colored with Enrollment Time")
-	fig.tight_layout()
 	scatter_pdf.savefig()
 	plt.savefig("serverWide_subjectsCountDurationScatter.jpg") # for this one also saving as jpg for email attachment
 	# now second page, will relate to day numbers for subject ID
 	# first and then last diary accepted day each versus gap since last diary, month since consent hue 
-	fig, axs = plt.subplots(figsize=(15,20), nrows=1, ncols=2)
+	fig, axs = plt.subplots(figsize=(15,20), nrows=2, ncols=1)
 	sns.scatterplot(x="first_accepted_submit_day",y="time_since_last_accepted_submit",hue="months_since_consent",palette="coolwarm",hue_norm=(0,12),data=subject_qc,ax=axs[0])
 	sns.scatterplot(x="last_accepted_submit_day",y="time_since_last_accepted_submit",hue="months_since_consent",palette="coolwarm",hue_norm=(0,12),data=subject_qc,ax=axs[1])
 	for ax in axs:
@@ -192,11 +191,10 @@ def diary_monitoring_visuals(source_folder):
 	axs[0].set_xlabel("Study Day of First Successful Audio Journal Submission")
 	axs[1].set_xlabel("Study Day of Last Successful Audio Journal Submission (as of " + cur_date + ")")
 	fig.suptitle(cur_server + " Submission Timepoint Info vs Latest Participation Gap (size in days) by Subject, Colored with Enrollment Time" + "\n" + "(top x = first study day with diary, bottom x = most recent study day with diary)")
-	fig.tight_layout()
 	scatter_pdf.savefig()
 	# finally will do third page with some diary level dots for engagement info
 	# relative study day versus word count with weekday hue and then relative study day versus submit_hour_int with duration hue
-	fig, axs = plt.subplots(figsize=(15,20), nrows=1, ncols=2)
+	fig, axs = plt.subplots(figsize=(15,20), nrows=2, ncols=1)
 	sns.scatterplot(x="day",y="word_count",hue="weekday",data=combined_qc,ax=axs[0])
 	sns.scatterplot(x="day",y="submit_hour_int",hue="length_minutes",palette="coolwarm",hue_norm=(0,4),data=combined_qc,ax=axs[1])
 	for ax in axs:
@@ -207,7 +205,6 @@ def diary_monitoring_visuals(source_folder):
 	axs[1].set_title("Diary Submission Hour Over Time (recording duration hue)")
 	axs[1].set_ylabel("Submission Hour (timezone and social adjusted, floored integer)")
 	fig.suptitle(cur_server + " Submission Study Day vs Enagagement Metrics by Journal" + "\n" + "(data as of " + cur_date + ")")
-	fig.tight_layout()
 	scatter_pdf.savefig()
 	# now done!
 	scatter_pdf.close()
@@ -224,7 +221,7 @@ def diary_monitoring_visuals(source_folder):
 		if cur_qc.empty:
 			print("WARNING: site " + st + " has entries in combined QC CSV but no actual valid QC rows")
 			continue		
-		fig, axs = plt.subplots(figsize=(15,20), nrows=1, ncols=2)
+		fig, axs = plt.subplots(figsize=(15,20), nrows=2, ncols=1)
 		sns.scatterplot(x="day",y="length_minutes",hue="subject",data=cur_qc,ax=axs[0])
 		sns.scatterplot(x="day",y="length_minutes",hue="siteID",data=combined_qc,ax=axs[1])
 		for ax in axs:
@@ -234,7 +231,6 @@ def diary_monitoring_visuals(source_folder):
 		axs[0].set_title("[Site " + st + "] Submission Study Day vs Diary Durations, Colored by Subject ID")
 		axs[1].set_title("Server-wide Submission Study Day vs Diary Durations, Colored by Site (for reference)")
 		fig.suptitle(cur_server + st + "  Successful Diary Submission Durations Over Time" + "\n" + "(server-wide at bottom for reference, data as of " + cur_date + ")")
-		fig.tight_layout()
 		scatter_sites_pdf.savefig()
 	# now done!
 	scatter_sites_pdf.close()
@@ -252,7 +248,6 @@ def diary_monitoring_visuals(source_folder):
 	axs[1].set_ylabel("Fraction (rolling mean with stdev error)")
 	axs[1].set_xlabel("Study Day")
 	fig.suptitle(cur_server + "Server-wide Participation Timecourse as of " + cur_date + "\n" + "(for each study day, considering subjects at or past that point with >=1 diary submit, and then counts of accepted diaries on that day)")
-	fig.tight_layout
 	times_pdf.savefig()
 	plt.savefig("serverWide_participationTimecourse.jpg") # for this one also saving as jpg for email attachment
 	# now repeat for individual sites, can use same site list as above scatter
@@ -268,7 +263,6 @@ def diary_monitoring_visuals(source_folder):
 		axs[1].set_ylabel("Fraction (rolling mean with stdev error)")
 		axs[1].set_xlabel("Study Day (" + st + " only)" )
 		fig.suptitle(cur_server + st + "Site-specific Participation Timecourse as of " + cur_date + "\n" + "(for each study day, considering subjects at or past that point with >=1 diary submit, and then counts of accepted diaries on that day)")
-		fig.tight_layout
 		times_pdf.savefig()
 	# now done!
 	times_pdf.close()
@@ -692,7 +686,6 @@ def stacked_line_plots(input_df_list,error_bars=None):
 	# final figure cleanup
 	for ax in axs: # Hide x labels and tick labels for all but bottom plot.
 		ax.label_outer()
-	fig.tight_layout()
 
 	return fig,axs
 
