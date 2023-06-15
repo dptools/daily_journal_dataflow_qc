@@ -19,7 +19,7 @@ basic_email_from="mennis2@mgb.org" # sendmail supports easy from address specifi
 detailed_email="mennis2@mgb.org" 
 mailx_attach="A" # lookup flag that mailx command on your server uses for attachments
 # finally just a flag to determine whether server-wide emails get sent daily or only weekly on Mondays
-daily_testing_mode=1
+daily_testing_mode=0
 
 # python env setup as well
 . /opt/software/miniconda3/etc/profile.d/conda.sh 
