@@ -129,7 +129,7 @@ if [[ ! -e summary_body.html ]]; then
 fi
 
 sendmail_subject="${server_name} Weekly Journals Data Summary - ${cur_date}" 
-sendmail -t <<EOT
+/usr/sbin/sendmail -t <<EOT
 To: ${summary_email_list}
 From: ${summary_from}
 Subject: ${sendmail_subject}
