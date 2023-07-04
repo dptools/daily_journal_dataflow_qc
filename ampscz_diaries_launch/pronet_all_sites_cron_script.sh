@@ -19,7 +19,9 @@ basic_email_from="mennis2@mgb.org" # sendmail supports easy from address specifi
 detailed_email="mennis2@mgb.org" 
 mailx_attach="A" # lookup flag that mailx command on your server uses for attachments
 # finally just a flag to determine whether server-wide emails get sent daily or only weekly on Mondays
-daily_testing_mode=0
+daily_testing_mode=1
+testing_email="mennis2@mgb.org" 
+# both emails will go to the same address(es) when in testing mode, different than normal weekly
 
 # python env setup as well
 . /opt/software/miniconda3/etc/profile.d/conda.sh 
@@ -37,7 +39,7 @@ bash "$repo_path"/run_full_pipeline_all_sites.sh "$configs_path"
 
 # now call the server-wide summary function portion using needed arguments, when it is applicable
 if [[ ${daily_testing_mode} == 1 ]]; then
-	bash "$repo_path"/site_wide_summary_generation.sh "$server_label" "$data_root" "$basic_email" "$basic_email_from" "$detailed_email" "$mailx_attach"
+	bash "$repo_path"/site_wide_summary_generation.sh "$server_label" "$data_root" "$testing_email" "$basic_email_from" "$testing_email" "$mailx_attach"
 elif [[ $(date +%u) == 1 ]]; then
 	bash "$repo_path"/site_wide_summary_generation.sh "$server_label" "$data_root" "$basic_email" "$basic_email_from" "$detailed_email" "$mailx_attach"
 fi
