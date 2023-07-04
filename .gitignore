@@ -10,4 +10,11 @@ logs/*/*.txt
 logs/*/*/*.txt
 logs/*/*.csv
 logs/*/*/*.csv
+logs/*/*/*.pdf
+logs/*/*/*.jpg
+logs/*/*/*.html
 logs/**
+TODO*
+*/TODO*
+*/*/TODO*
+**/TODO*

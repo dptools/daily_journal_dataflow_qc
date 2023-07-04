@@ -77,7 +77,10 @@ def diary_csv_summarize(data_root, output_folder):
 	num_subjects_total = []
 	num_subjects_phone_protected = []
 	for site in sites_list_filt:
-		cur_sub_list = os.listdir(os.path.join(site,"raw"))
+		try:
+			cur_sub_list = os.listdir(os.path.join(site,"raw"))
+		except:
+			cur_sub_list = []
 		try:
 			for gen_side_sub in os.listdir(os.path.join(data_root,"GENERAL",site,"raw")):
 				if gen_side_sub not in cur_sub_list:

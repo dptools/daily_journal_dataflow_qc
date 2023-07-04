@@ -2,9 +2,9 @@
 
 # basic path settings
 data_root="/mnt/ProNET/Lochness/PHOENIX"
-site="PronetYA"
+study="PronetIR"
 export data_root
-export site
+export study
 
 # auto transcription settings
 auto_send_on="Y" # if "N", QC will be calculated without uploading anything to TranscribeMe
@@ -20,7 +20,7 @@ export length_cutoff
 export db_cutoff
 
 # need site timezone for estimating true diary submission time (and adjusting date if needed) from provided UTC timestamp
-timezone="America/New_York"
+timezone="America/Los_Angeles"
 # language marker setting to add to the files that are uploaded to TranscribeMe, to alert them of what language the audio will be in
 transcription_language="ENGLISH"
 export timezone

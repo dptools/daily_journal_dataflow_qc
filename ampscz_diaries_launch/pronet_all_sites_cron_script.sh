@@ -13,7 +13,7 @@ permissions_group_name=pronet
 data_root=/mnt/ProNET/Lochness/PHOENIX
 # part of settings are the list of addresses for two main types of email alerts
 # first list of addresses that will get high level summary email with embedded highlights
-basic_email="mennis@g.harvard.edu,pwolff@emory.edu,JTBAKER@partners.org,ELIEBENTHAL@mclean.harvard.edu" 
+basic_email="mennis@g.harvard.edu,mennis2@mgb.org,pwolff@emory.edu,JTBAKER@partners.org,ELIEBENTHAL@mclean.harvard.edu,linying.li@emory.edu" 
 basic_email_from="mennis2@mgb.org" # sendmail supports easy from address specification
 # then list of addresses that will receive email with attachments that give much more detailed QC/accounting
 detailed_email="mennis2@mgb.org" 
