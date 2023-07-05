@@ -2,9 +2,9 @@
 
 # basic path settings
 data_root="/mnt/ProNET/Lochness/PHOENIX"
-study="PronetSF"
+site="PronetSF"
 export data_root
-export study
+export site
 
 # auto transcription settings
 auto_send_on="Y" # if "N", QC will be calculated without uploading anything to TranscribeMe
