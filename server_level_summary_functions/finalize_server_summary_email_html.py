@@ -30,7 +30,7 @@ def diary_monitoring_html(source_folder,html_path,css_style_path):
 		return
 
 	# clean up dataframe
-	df.dropna(how="any",inplace=True)
+	df.dropna(subset=["sum_minutes_audio_uploaded","num_audio_files_uploaded"],how="any",inplace=True)
 	df["Site"] = [x[-2:] for x in df["site"].tolist()]
 	df["Subjects Submitting EMAs (>=1)"] = df["num_subjects_any_ema"].astype(int)
 	df["Subjects Submitting Journals (>=1)"] = df["num_subjects_any_journal"].astype(int)
