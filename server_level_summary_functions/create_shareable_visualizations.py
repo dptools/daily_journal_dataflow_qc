@@ -59,7 +59,7 @@ def diary_monitoring_visuals(source_folder):
 
 		# next will consider QC features to distribute over diaries with site-level coloring
 		# first make a few rate-based features where applicable
-		if combined_qc.dropna(subset=["word_count"]).shape == 0:
+		if combined_qc.dropna(subset=["word_count"]).shape[0] == 0:
 			print("Note no transcript QC data found on this server yet, QC visuals will be shortened")
 			qc_feat_list = [["day", "submit_hour_int", "weekday", "length_minutes"],
 							["overall_db", "mean_flatness"]]
