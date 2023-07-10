@@ -23,8 +23,8 @@ basic_email_from="mennis2@mgb.org" # sendmail supports easy from address specifi
 detailed_email="mennis2@mgb.org,sophie.tod@orygen.org.au,HRAHIMIEICHI@mgb.org" 
 mailx_attach="a" # lookup flag that mailx command on your server uses for attachments
 # finally just a flag to determine whether server-wide emails get sent daily or only weekly on Mondays
-daily_testing_mode=1
-testing_email="mennis2@mgb.org" 
+daily_testing_mode=0
+testing_email="mennis@g.harvard.edu" 
 # both emails will go to the same address(es) when in testing mode, different than normal weekly
 
 # activate python environment, with setup paths specific to current Prescient server

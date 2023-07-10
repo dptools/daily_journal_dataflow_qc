@@ -73,9 +73,9 @@ def diary_monitoring_html(source_folder,html_path,css_style_path):
 
 	# then setup to embed images - headers are hard-coded within this function, but really all that is specified here is a code that will be used in pipeline wrapper
 	# this enables 1 image per image_render object here to be embedded, paths to images will be specified in sendmail in that other script in order
-	image_header1 = "Relationship Between Subject Submission Counts and Durations (as well as time in study so far)"
-	image_header2 = "Participation Rate Trends Over Time Enrolled in Study"
-	image_header3 = "Server-wide Distribution of Key QC Features (for diaries with returned transcripts)"
+	image_header1 = "Participation Rate Trends Over Time Enrolled in Study"
+	image_header2 = "Server-wide Distribution of Key QC Features (for diaries with returned transcripts)"
+	image_header3 = "Relationship Between Subject Submission Counts and Durations (as well as site for top bird's eye view and time in study so far for bottom zoomed-in view)"
 	image_render1 = "<h3>" + image_header1 + "</h3> <img src=\"cid:part1.06090408.01060107\" style=\"width:100%; height:auto; border:none;\" alt=\"" + image_header1 + "\">"
 	image_render2 = "<h3>" + image_header2 + "</h3> <img src=\"cid:part2.06090408.01060107\" style=\"width:100%; height:auto; border:none;\" alt=\"" + image_header2 + "\">"
 	image_render3 = "<h3>" + image_header3 + "</h3> <img src=\"cid:part3.06090408.01060107\" style=\"width:100%; height:auto; border:none;\" alt=\"" + image_header3 + "\">"

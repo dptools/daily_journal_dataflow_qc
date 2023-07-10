@@ -127,6 +127,8 @@ if [[ ! -e summary_body.html ]]; then
 	echo "WARNING: no summary email body HTML generated, some issue with pipeline? Exiting"
 	exit
 fi
+# note order of images to be embedded and their corresponding codes is directly related to what is specified in the html generation python script
+# so any changes to this email need to be made in both places!
 
 sendmail_subject="${server_name} Weekly Journals Data Summary - ${cur_date}" 
 /usr/sbin/sendmail -t <<EOT
@@ -143,17 +145,9 @@ Content-Transfer-Encoding: 7bit
 $(cat summary_body.html)
 
 --XYZ
-Content-Type: image/jpeg;name="serverWide_subjectsCountDurationScatter.jpg"
-Content-Transfer-Encoding: base64
-Content-ID: <part1.06090408.01060107>
-Content-Disposition: inline; filename="serverWide_subjectsCountDurationScatter.jpg"
-
-$(base64 serverWide_subjectsCountDurationScatter.jpg)
-
---XYZ
 Content-Type: image/jpeg;name="serverWide_participationTimecourse.jpg"
 Content-Transfer-Encoding: base64
-Content-ID: <part2.06090408.01060107>
+Content-ID: <part1.06090408.01060107>
 Content-Disposition: inline; filename="serverWide_participationTimecourse.jpg"
 
 $(base64 serverWide_participationTimecourse.jpg)
@@ -161,10 +155,18 @@ $(base64 serverWide_participationTimecourse.jpg)
 --XYZ
 Content-Type: image/jpeg;name="serverWide_keyQCHistogram.jpg"
 Content-Transfer-Encoding: base64
-Content-ID: <part3.06090408.01060107>
+Content-ID: <part2.06090408.01060107>
 Content-Disposition: inline; filename="serverWide_keyQCHistogram.jpg"
 
 $(base64 serverWide_keyQCHistogram.jpg)
+
+--XYZ
+Content-Type: image/jpeg;name="serverWide_subjectsCountDurationScatter.jpg"
+Content-Transfer-Encoding: base64
+Content-ID: <part3.06090408.01060107>
+Content-Disposition: inline; filename="serverWide_subjectsCountDurationScatter.jpg"
+
+$(base64 serverWide_subjectsCountDurationScatter.jpg)
 
 --XYZ--
 EOT

@@ -63,9 +63,9 @@ def diary_monitoring_visuals(source_folder):
 			print("Note no transcript QC data found on this server yet, QC visuals will be shortened")
 			qc_feat_list = [["day", "submit_hour_int", "weekday", "length_minutes"],
 							["overall_db", "mean_flatness"]]
-			qc_bins = [[list(range(1,365,14)),list(range(4,28)),list(range(1,8)),[0.0,0.1,0.25,0.5,0.75,1.0,1.5,2.0,3.0,4.0]],
-					   [[40,45,50,55,60,65,70,75,80,90,100],25]]
-			qc_title = cur_server + " Uploaded Audio Journal QC Metric Distributions by Site" + "\n" + "(Data as of " + cur_date + " - note no corresponding transcripts available at this time)"
+			qc_bins = [[list(range(1,365,14)),list(range(4,28)),list(range(1,8)),[0.0,0.25,0.5,0.75,1.0,1.5,2.0,2.5,3.0,4.1]],
+					   [[40,45,50,55,60,65,70,75,80,90,100],[0.0,0.001,0.005,0.01,0.02,0.05,0.1,0.2,0.5,1.0]]]
+			qc_title = cur_server + " TranscribeMe Uploaded Audio Journal QC Metric Distributions by Site" + "\n" + "(Data as of " + cur_date + " - note no corresponding transcripts available at this time)"
 		
 			proceed=False
 		else:
@@ -81,11 +81,11 @@ def diary_monitoring_visuals(source_folder):
 							["word_count", "words_per_sentence", "min_timestamp_space_seconds", "max_timestamp_space_seconds"],
 							["inaudible_count", "questionable_count", "other_bracketed_notation_count", "redacted_count"],
 							["inaudible_rate_per_word", "questionable_rate_per_word", "other_brackets_rate_per_word", "redacted_rate_per_word"]]
-			rate_bin_list = [0,0.001,0.005,0.01,0.02,0.03,0.04,0.05]
-			qc_bins = [[list(range(1,365,14)),list(range(4,28)),list(range(1,9)),[0.0,0.1,0.25,0.5,0.75,1.0,1.5,2.0,3.0,4.0]],
-					   [[40,45,50,55,60,65,70,75,80,90,100],20,[1,2,3],15],
-					   [30,20,10,10],[10,10,10,10],[rate_bin_list,rate_bin_list,rate_bin_list,rate_bin_list]]
-			qc_title = cur_server + " Uploaded Audio Journal QC Metric Distributions by Site" + "\n" + "(Data as of " + cur_date + ")"
+			rate_bin_list = [0,0.001,0.005,0.01,0.02,0.03,0.04,0.05,0.1]
+			qc_bins = [[list(range(1,365,14)),list(range(4,28)),list(range(1,9)),[0.0,0.25,0.5,0.75,1.0,1.5,2.0,2.5,3.0,4.1]],
+					   [[40,45,50,55,60,65,70,75,80,90,100],[0.0,0.001,0.005,0.01,0.02,0.05,0.1,0.2,0.5,1.0],[1,2,3,5],15],
+					   [30,20,[0,1,2.5,5,10,20,30,60],[0,5,10,15,20,25,30,45,60,75,90,120,150]],[10,5,5,10],[rate_bin_list,rate_bin_list,rate_bin_list,rate_bin_list]]
+			qc_title = cur_server + " TranscribeMe Uploaded Audio Journal QC Metric Distributions by Site" + "\n" + "(Data as of " + cur_date + ")"
 
 		stacked_histograms_with_labels(combined_qc,qc_feat_list,"allDiariesServerWide_QCDistributions_coloredBySite.pdf",
 									   dividing_feature_name="siteID",bin_specs=qc_bins,counted_object_name="Diaries",plot_suptitle=qc_title)
@@ -95,7 +95,8 @@ def diary_monitoring_visuals(source_folder):
 		if len(qc_feat_list) > 2:
 			# note this may fail eventually if more than 30 subjects for a site start having journal data, would have to tweak approach
 			fine_feat_list = ["length_minutes", "total_sentence_count", "word_count", "inaudible_rate_per_word"]
-			fine_bin_list = [[0.0,0.1,0.25,0.5,0.75,1.0,1.5,2.0,3.0,4.0], 15, 30, rate_bin_list]
+			# here give specific range for sentence count and word count, in order to keep static across sites
+			fine_bin_list = [[0.0,0.25,0.5,0.75,1.0,1.5,2.0,2.5,3.0,4.1], list(range(0,1001,50)), [0,5,10,15,20,25,30,40,50,60,70], rate_bin_list]
 
 			sites_list_trans = list(set(combined_qc.dropna(subset=["word_count"])["site"].tolist()))
 			sites_list_trans.sort()
@@ -135,14 +136,14 @@ def diary_monitoring_visuals(source_folder):
 		# now setup for histogram function input
 		subject_feats = [["num_days_ema_submit","num_days_journal_submit","num_audio_files_uploaded","sum_minutes_audio_uploaded"],
 						 ["first_accepted_submit_day","last_accepted_submit_day","time_since_last_accepted_submit","months_since_consent"]]
-		count_bins = [0,8,15,22,29,43,58,86,114,174,235,300,365]
+		count_bins = [0,8,15,22,29,43,58,86,114,174,235,300]
 		min_bins = [x * 1.5 for x in count_bins]
 		min_bins.append(2.0*365)
-		min_bins.append(3.0*365)
-		first_day_bins = list(range(1,15))
-		first_day_bins.extend([21,28,35,70,105])
+		first_day_bins = [1,7,14,21,28,35,70,105]
+		last_day_bins = [1,7,14,21,28,35,70,105,175,245,315]
+		recent_day_bins = [0,1,3,5,7,14,28,56,112,224]
 		subject_bins = [[count_bins,count_bins,count_bins,min_bins],
-						[first_day_bins,count_bins,first_day_bins,list(range(13))]]
+						[first_day_bins,last_day_bins,recent_day_bins,list(range(13))]]
 		subject_title = cur_server + " Distributions of Participation Metrics Over Diary-Submitting Subject IDs by Site" + "\n" + "(Data as of " + cur_date + ")"
 
 		stacked_histograms_with_labels(subject_qc,subject_feats,"allSubjectsServerWide_participationStatDistributions_coloredBySite.pdf",
@@ -165,26 +166,27 @@ def diary_monitoring_visuals(source_folder):
 	scatter_pdf = PdfPages("serverWide_journalEngagementScatterPlots.pdf")
 	# start with first page total count vs total duration per subject with months since consent hue
 	# (second figure below is just zoomed-in version to see better those with less excellent participation rates)
-	fig, axs = plt.subplots(figsize=(15,20), nrows=2, ncols=1)
-	sns.scatterplot(x="num_audio_files_uploaded",y="sum_minutes_audio_uploaded",hue="months_since_consent",palette="coolwarm",hue_norm=(0,12),data=subject_qc,s=100,ax=axs[0])
-	sns.scatterplot(x="num_audio_files_uploaded",y="sum_minutes_audio_uploaded",hue="months_since_consent",palette="coolwarm",hue_norm=(0,12),data=subject_qc,s=100,ax=axs[1])
+	# as months since consent is more relevant in looking at smaller participants to see how long they've been in study, use site hue instead on the more zoomed out version
+	fig, axs = plt.subplots(figsize=(15,16), nrows=2, ncols=1)
+	sns.scatterplot(x="num_audio_files_uploaded",y="sum_minutes_audio_uploaded",hue="siteID",data=subject_qc,s=75,ax=axs[0])
+	sns.scatterplot(x="num_audio_files_uploaded",y="sum_minutes_audio_uploaded",hue="months_since_consent",palette="coolwarm",hue_norm=(0,12),data=subject_qc,s=75,ax=axs[1])
 	axs[1].set_xlim(0,32)
 	axs[1].set_ylim(0,64)
 	for ax in axs:
 		ax.legend()
 		ax.set_xlabel("Number of Successful Audio Journal Submissions (as of " + cur_date + ")")
 		ax.set_ylabel("Total Minutes of Successful Audio Journal Submissions (as of " + cur_date + ")")
-	axs[0].set_title("Full Subject ID Participation Scatter (months since consent hue)")
+	axs[0].set_title("Full Subject ID Participation Scatter (site hue)")
 	axs[1].set_title("Zoomed-In Subject ID Participation Scatter (months since consent hue)")
-	fig.suptitle(cur_server + " Journal Count vs Total Duration by Subject, Colored with Enrollment Time")
+	fig.suptitle(cur_server + " Journal Count vs Total Duration by Subject, Colored with Site (top bird's eye) and Enrollment Time (bottom zoomed-in)")
 	fig.tight_layout(pad=2.0)
 	scatter_pdf.savefig()
 	plt.savefig("serverWide_subjectsCountDurationScatter.jpg") # for this one also saving as jpg for email attachment
 	# now second page, will relate to day numbers for subject ID
 	# first and then last diary accepted day each versus gap since last diary, month since consent hue 
 	fig, axs = plt.subplots(figsize=(15,20), nrows=2, ncols=1)
-	sns.scatterplot(x="first_accepted_submit_day",y="time_since_last_accepted_submit",hue="months_since_consent",palette="coolwarm",hue_norm=(0,12),data=subject_qc,s=100,ax=axs[0])
-	sns.scatterplot(x="last_accepted_submit_day",y="time_since_last_accepted_submit",hue="months_since_consent",palette="coolwarm",hue_norm=(0,12),data=subject_qc,s=100,ax=axs[1])
+	sns.scatterplot(x="first_accepted_submit_day",y="time_since_last_accepted_submit",hue="months_since_consent",palette="coolwarm",hue_norm=(0,12),data=subject_qc,s=75,ax=axs[0])
+	sns.scatterplot(x="last_accepted_submit_day",y="time_since_last_accepted_submit",hue="months_since_consent",palette="coolwarm",hue_norm=(0,12),data=subject_qc,s=75,ax=axs[1])
 	for ax in axs:
 		ax.legend()
 		ax.set_title("Subject ID Timeline Stats Scatter (months since consent hue)")
@@ -233,7 +235,7 @@ def diary_monitoring_visuals(source_folder):
 			ax.set_ylabel("Recording Duration (minutes)")
 		axs[0].set_title("[Site " + st + "] Submission Study Day vs Diary Durations, Colored by Subject ID")
 		axs[1].set_title("Server-wide Submission Study Day vs Diary Durations, Colored by Site (for reference)")
-		fig.suptitle(cur_server + st + "  Successful Diary Submission Durations Over Time" + "\n" + "(server-wide at bottom for reference, data as of " + cur_date + ")")
+		fig.suptitle(cur_server + st + " Successful Diary Submission Durations Over Time" + "\n" + "(server-wide at bottom for reference, data as of " + cur_date + ")")
 		fig.tight_layout(pad=2.0)
 		scatter_sites_pdf.savefig()
 	# now done!
@@ -252,7 +254,7 @@ def diary_monitoring_visuals(source_folder):
 	axs[1].set_ylabel("Fraction (rolling mean with stdev error)")
 	axs[1].set_xlabel("Study Day")
 	axs[1].set_xlim(0,366)
-	fig.suptitle(cur_server + "Server-wide Participation Timecourse as of " + cur_date + "\n" + "(for each study day, considering subjects at or past that point with >=1 diary submit, and then counts of accepted diaries on that day)")
+	fig.suptitle(cur_server + " Server-wide Participation Timecourse as of " + cur_date + "\n" + "(for each study day, considering subjects at or past that point with >=1 diary submit, and then counts of accepted diaries on that day)")
 	fig.tight_layout(pad=2.0,h_pad=0.5)
 	times_pdf.savefig()
 	plt.savefig("serverWide_participationTimecourse.jpg") # for this one also saving as jpg for email attachment
@@ -269,7 +271,7 @@ def diary_monitoring_visuals(source_folder):
 		axs[1].set_ylabel("Fraction (rolling mean with stdev error)")
 		axs[1].set_xlabel("Study Day (" + st + " only)" )
 		axs[1].set_xlim(0,366)
-		fig.suptitle(cur_server + st + "Site-specific Participation Timecourse as of " + cur_date + "\n" + "(for each study day, considering subjects at or past that point with >=1 diary submit, and then counts of accepted diaries on that day)")
+		fig.suptitle(cur_server + st + " Site-specific Participation Timecourse as of " + cur_date + "\n" + "(for each study day, considering subjects at or past that point with >=1 diary submit, and then counts of accepted diaries on that day)")
 		fig.tight_layout(pad=2.0,h_pad=0.5)
 		times_pdf.savefig()
 	# now done!
@@ -419,7 +421,31 @@ def stacked_histograms_with_labels(input_df,features_nested_list,pdf_savepath,di
 			cur_ax.set_xlabel(xname)
 			cur_ax.set_ylabel(yname)
 			max_x = cur_ax.get_xlim()[-1]
-			if max_x > 100:
+			if max_x > 5000:
+				x_ticks_list = list(range(0,500,100))
+				x_ticks_list.extend(list(range(500,int(max_x)+1,250)))
+				cur_ax.set_xticks(x_ticks_list)
+				for tick in cur_ax.get_xticklabels():
+					tick.set_rotation(45)
+			elif max_x > 1000:
+				x_ticks_list = list(range(0,300,50))
+				x_ticks_list.extend(list(range(300,int(max_x)+1,100)))
+				cur_ax.set_xticks(x_ticks_list)
+				for tick in cur_ax.get_xticklabels():
+					tick.set_rotation(45)
+			elif max_x > 600:
+				x_ticks_list = list(range(0,200,25))
+				x_ticks_list.extend(list(range(200,int(max_x)+1,50)))
+				cur_ax.set_xticks(x_ticks_list)
+				for tick in cur_ax.get_xticklabels():
+					tick.set_rotation(45)
+			elif max_x > 300:
+				x_ticks_list = list(range(0,100,10))
+				x_ticks_list.extend(list(range(100,int(max_x)+1,25)))
+				cur_ax.set_xticks(x_ticks_list)
+				for tick in cur_ax.get_xticklabels():
+					tick.set_rotation(45)
+			elif max_x > 100:
 				x_ticks_list = list(range(0,100,5))
 				x_ticks_list.extend(list(range(100,int(max_x)+1,15)))
 				cur_ax.set_xticks(x_ticks_list)
