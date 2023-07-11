@@ -64,7 +64,7 @@ def diary_monitoring_visuals(source_folder):
 			qc_feat_list = [["day", "submit_hour_int", "weekday", "length_minutes"],
 							["overall_db", "mean_flatness"]]
 			qc_bins = [[list(range(1,365,14)),list(range(4,28)),list(range(1,8)),[0.0,0.25,0.5,0.75,1.0,1.5,2.0,2.5,3.0,4.1]],
-					   [[40,45,50,55,60,65,70,75,80,90,100],[0.0,0.001,0.005,0.01,0.02,0.05,0.1,0.2,0.5,1.0]]]
+					   [[40,45,50,55,60,65,70,75,80,90,100],[0.0,0.01,0.02,0.05,0.1,0.2,0.5,1.0]]]
 			qc_title = cur_server + " TranscribeMe Uploaded Audio Journal QC Metric Distributions by Site" + "\n" + "(Data as of " + cur_date + " - note no corresponding transcripts available at this time)"
 		
 			proceed=False
@@ -83,7 +83,7 @@ def diary_monitoring_visuals(source_folder):
 							["inaudible_rate_per_word", "questionable_rate_per_word", "other_brackets_rate_per_word", "redacted_rate_per_word"]]
 			rate_bin_list = [0,0.001,0.005,0.01,0.02,0.03,0.04,0.05,0.1]
 			qc_bins = [[list(range(1,365,14)),list(range(4,28)),list(range(1,9)),[0.0,0.25,0.5,0.75,1.0,1.5,2.0,2.5,3.0,4.1]],
-					   [[40,45,50,55,60,65,70,75,80,90,100],[0.0,0.001,0.005,0.01,0.02,0.05,0.1,0.2,0.5,1.0],[1,2,3,5],15],
+					   [[40,45,50,55,60,65,70,75,80,90,100],[0.0,0.01,0.02,0.05,0.1,0.2,0.5,1.0],[1,2,3,5],15],
 					   [30,20,[0,1,2.5,5,10,20,30,60],[0,5,10,15,20,25,30,45,60,75,90,120,150]],[10,5,5,10],[rate_bin_list,rate_bin_list,rate_bin_list,rate_bin_list]]
 			qc_title = cur_server + " TranscribeMe Uploaded Audio Journal QC Metric Distributions by Site" + "\n" + "(Data as of " + cur_date + ")"
 
@@ -96,7 +96,7 @@ def diary_monitoring_visuals(source_folder):
 			# note this may fail eventually if more than 30 subjects for a site start having journal data, would have to tweak approach
 			fine_feat_list = ["length_minutes", "total_sentence_count", "word_count", "inaudible_rate_per_word"]
 			# here give specific range for sentence count and word count, in order to keep static across sites
-			fine_bin_list = [[0.0,0.25,0.5,0.75,1.0,1.5,2.0,2.5,3.0,4.1], list(range(0,1001,50)), [0,5,10,15,20,25,30,40,50,60,70], rate_bin_list]
+			fine_bin_list = [[0.0,0.25,0.5,0.75,1.0,1.5,2.0,2.5,3.0,4.1], [0,5,10,15,20,25,30,40,50,60,70], list(range(0,1001,50)), rate_bin_list]
 
 			sites_list_trans = list(set(combined_qc.dropna(subset=["word_count"])["site"].tolist()))
 			sites_list_trans.sort()
@@ -137,11 +137,10 @@ def diary_monitoring_visuals(source_folder):
 		subject_feats = [["num_days_ema_submit","num_days_journal_submit","num_audio_files_uploaded","sum_minutes_audio_uploaded"],
 						 ["first_accepted_submit_day","last_accepted_submit_day","time_since_last_accepted_submit","months_since_consent"]]
 		count_bins = [0,8,15,22,29,43,58,86,114,174,235,300]
-		min_bins = [x * 1.5 for x in count_bins]
-		min_bins.append(2.0*365)
+		min_bins = [x * 2 for x in count_bins]
 		first_day_bins = [1,7,14,21,28,35,70,105]
 		last_day_bins = [1,7,14,21,28,35,70,105,175,245,315]
-		recent_day_bins = [0,1,3,5,7,14,28,56,112,224]
+		recent_day_bins = [0,3,7,14,28,56,112,224]
 		subject_bins = [[count_bins,count_bins,count_bins,min_bins],
 						[first_day_bins,last_day_bins,recent_day_bins,list(range(13))]]
 		subject_title = cur_server + " Distributions of Participation Metrics Over Diary-Submitting Subject IDs by Site" + "\n" + "(Data as of " + cur_date + ")"
