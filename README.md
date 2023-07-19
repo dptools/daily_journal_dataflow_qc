@@ -20,7 +20,7 @@ Substantial additional information on both the AMPSCZ project and the audio jour
 	- [Server-wide Summary Steps](#summary)
 4. [Guide to Monitoring Tools](#monitor)
 	- [Weekly Summary HTML Email Contents](#html)
-	- [Weekly Detailed Logging Email CSVs](#csv)
+	- [Weekly Detailed Logging Email CSVs and PDFs](#csv)
 5. [Next Directions](#future)
 
 
