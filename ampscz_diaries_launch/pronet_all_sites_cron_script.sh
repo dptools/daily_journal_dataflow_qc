@@ -13,13 +13,13 @@ permissions_group_name=pronet
 data_root=/mnt/ProNET/Lochness/PHOENIX
 # part of settings are the list of addresses for two main types of email alerts
 # first list of addresses that will get high level summary email with embedded highlights
-basic_email="mennis2@mgb.org,pwolff@emory.edu,JTBAKER@mgb.org,ELIEBENTHAL@mclean.harvard.edu,linying.li@emory.edu,hrahimieichi@mgb.org,zarina.bilgrami@emory.edu,sylvain.bouix@etsmtl.ca,angela.nunez@yale.edu,SRay@northwell.edu"
+basic_email="mennis2@mgb.org,pwolff@emory.edu,JTBAKER@mgb.org,ELIEBENTHAL@mclean.harvard.edu,linying.li@emory.edu,hrahimieichi@mgb.org,zarina.bilgrami@emory.edu,sylvain.bouix@etsmtl.ca,SRay@northwell.edu"
 basic_email_from="mennis2@mgb.org" # sendmail supports easy from address specification
 # then list of addresses that will receive email with attachments that give much more detailed QC/accounting
 detailed_email="mennis2@mgb.org,linying.li@emory.edu,pwolff@emory.edu" 
 mailx_attach="A" # lookup flag that mailx command on your server uses for attachments
 # finally just a flag to determine whether server-wide emails get sent daily or only weekly on Mondays
-daily_testing_mode=0
+daily_testing_mode=1 # keep in test mode while monitoring progress on MindLAMP data recovery
 testing_email="mennis@g.harvard.edu" 
 # both emails will go to the same address(es) when in testing mode, different than normal weekly
 
