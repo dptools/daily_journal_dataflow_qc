@@ -263,3 +263,42 @@ done
 
 echo "Audio side journals script completed for all current subjects of site ${site}!"
 # note doing email alerts for this pipeline only at the server-wide level
+
+now=$(date +"%T")
+echo ""
+echo "Current time: ${now}"
+
+# add final check of audio_to_send folder in case failed upload in a prior day but that subject has not submitted new diary since
+if [ $auto_send_on = "Y" ] || [ $auto_send_on = "y" ]; then
+	cd "$data_root"/PROTECTED/"$site"/processed
+	echo ""
+	echo "Double checking for failed TranscribeMe SFTP uploads (audio left from prior day perhaps)"
+	for p in *; do
+		if [[ ! -d $p/phone/audio_journals/audio_to_send ]]; then
+			continue
+		fi
+		cd "$p"/phone/audio_journals
+		if [ -z "$(ls -A audio_to_send)" ]; then
+			cd "$data_root"/PROTECTED/"$site"/processed
+			continue
+		fi
+
+		echo ""
+		echo "Audio to push found for subject ${p}, calling SFTP python function"
+		python "$func_root"/journal_transcribeme_sftp_push.py "$data_root" "$site" "$p" "$transcribeme_username" "$transcribeme_password" "$transcription_language"
+
+		# check if to_send is empty now - if so delete it, if not print an error message
+		if [ -z "$(ls -A audio_to_send)" ]; then
+			rm -rf audio_to_send
+		else
+			echo "WARNING: some diaries from subject ${p} meant to be pushed to TranscribeMe failed to upload. Check ${data_root}/PROTECTED/${site}/processed/${p}/phone/audio_journals/audio_to_send for more info."
+		fi
+
+		cd "$data_root"/PROTECTED/"$site"/processed
+	done
+	now=$(date +"%T")
+	echo ""
+	echo "Done with search! Script totally done"
+	echo "Current time: ${now}"
+fi
+
