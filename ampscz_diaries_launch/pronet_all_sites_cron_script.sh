@@ -19,7 +19,7 @@ basic_email_from="mennis2@mgb.org" # sendmail supports easy from address specifi
 detailed_email="mennis2@mgb.org,linying.li@emory.edu,pwolff@emory.edu" 
 mailx_attach="A" # lookup flag that mailx command on your server uses for attachments
 # finally just a flag to determine whether server-wide emails get sent daily or only weekly on Mondays
-daily_testing_mode=1 # keep in test mode while monitoring progress on MindLAMP data recovery
+daily_testing_mode=0 
 testing_email="mennis@g.harvard.edu" 
 # both emails will go to the same address(es) when in testing mode, different than normal weekly
 
