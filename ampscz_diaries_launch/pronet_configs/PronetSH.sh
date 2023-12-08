@@ -22,7 +22,7 @@ export db_cutoff
 # need site timezone for estimating true diary submission time (and adjusting date if needed) from provided UTC timestamp
 timezone="Asia/Shanghai"
 # language marker setting to add to the files that are uploaded to TranscribeMe, to alert them of what language the audio will be in
-transcription_language="ENGLISH"
+transcription_language="MANDARIN"
 export timezone
 export transcription_language
 
