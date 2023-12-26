@@ -2,7 +2,7 @@
 
 # basic path settings
 data_root="/mnt/prescient/Prescient_production/PHOENIX"
-site="PrescientLS"
+site="PrescientHK"
 export data_root
 export site
 
