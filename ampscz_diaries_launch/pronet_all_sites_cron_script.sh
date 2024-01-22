@@ -13,20 +13,19 @@ permissions_group_name=pronet
 data_root=/mnt/ProNET/Lochness/PHOENIX
 # part of settings are the list of addresses for two main types of email alerts
 # first list of addresses that will get high level summary email with embedded highlights
-basic_email="mennis2@mgb.org,pwolff@emory.edu,JTBAKER@mgb.org,ELIEBENTHAL@mclean.harvard.edu,linying.li@emory.edu,hrahimieichi@mgb.org,zarina.bilgrami@emory.edu,sylvain.bouix@etsmtl.ca,SRay@northwell.edu"
-basic_email_from="mennis2@mgb.org" # sendmail supports easy from address specification
+basic_email="dmohandass@mgh.harvard.edu,pwolff@emory.edu,JTBAKER@mgb.org,ELIEBENTHAL@mclean.harvard.edu,linying.li@emory.edu,hrahimieichi@mgb.org,zarina.bilgrami@emory.edu,sylvain.bouix@etsmtl.ca,SRay@northwell.edu"
+basic_email_from="dmohandass@mgh.harvard.edu" # sendmail supports easy from address specification
 # then list of addresses that will receive email with attachments that give much more detailed QC/accounting
-detailed_email="mennis2@mgb.org,linying.li@emory.edu,pwolff@emory.edu" 
+detailed_email="dmohandass@mgh.harvard.edu,linying.li@emory.edu,pwolff@emory.edu"
 mailx_attach="A" # lookup flag that mailx command on your server uses for attachments
 # finally just a flag to determine whether server-wide emails get sent daily or only weekly on Mondays
-daily_testing_mode=0 
-testing_email="mennis@g.harvard.edu" 
+daily_testing_mode=0
+testing_email="dmohandass@mgh.harvard.edu"
 # both emails will go to the same address(es) when in testing mode, different than normal weekly
 
 # python env setup as well
-. /opt/software/miniconda3/etc/profile.d/conda.sh 
+. /opt/software/miniconda3/etc/profile.d/conda.sh
 conda activate audio_process
-
 
 ### MORE GENERAL COMPONENTS
 
@@ -51,6 +50,3 @@ sudo chmod -R 770 "$data_root"/*/*/processed/*/phone/audio_journals
 sudo chgrp -R "$permissions_group_name" "$repo_path"/logs
 sudo chmod -R 770 "$repo_path"/logs
 # obviously this part assumes account running it is root, would have to remove suod otherwise
-
-
-
