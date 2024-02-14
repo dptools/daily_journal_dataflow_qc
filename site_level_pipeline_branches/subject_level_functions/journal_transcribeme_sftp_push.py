@@ -133,7 +133,7 @@ def get_transcription_language(subject_id: str, study: str, data_root: Path) -> 
 		else:
 			return None
 
-		return map_transcription_language(int(language_code))
+	return map_transcription_language(int(language_code))
 
 def transcript_push(data_root, site, subject, username, password, transcription_language):
 	# initialize list to keep track of which audio files will need to be moved at end of patient run
