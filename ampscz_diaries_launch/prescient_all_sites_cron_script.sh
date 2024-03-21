@@ -20,7 +20,7 @@ data_root=/mnt/prescient/Prescient_production/PHOENIX
 basic_email="dmohandass@mgh.harvard.edu,sophie.tod@orygen.org.au,eliebenthal@mclean.harvard.edu,HRAHIMIEICHI@mgb.org,jtbaker@mgb.org,sylvain.bouix@etsmtl.ca,dominic.dwyer@orygen.org.au,barnaby.nelson@orygen.org.au"
 basic_email_from="dmohandass@mgh.harvard.edu" # sendmail supports easy from address specification
 # then list of addresses that will receive email with attachments that give much more detailed QC/accounting
-detailed_email="dmohandass@mgh.harvard.edu,sophie.tod@orygen.org.au,HRAHIMIEICHI@mgb.org"
+detailed_email="dmohandass@mgh.harvard.edu,sophie.tod@orygen.org.au,HRAHIMIEICHI@mgb.org,jessica.hartmann@zi-mannheim.de,elle.butterworth@orygen.org.au"
 mailx_attach="a" # lookup flag that mailx command on your server uses for attachments
 # finally just a flag to determine whether server-wide emails get sent daily or only weekly on Mondays
 daily_testing_mode=0
