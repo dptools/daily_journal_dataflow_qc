@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # basic path settings
-data_root="/mnt/prescient/Prescient_production/PHOENIX"
+data_root="/var/lib/prescient/data/PHOENIX"
 site="PrescientCG"
 export data_root
 export site
