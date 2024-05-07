@@ -60,7 +60,7 @@ if [[ ! -d ../GENERAL/$site/processed ]]; then
 	echo "ERROR: site folder ${site} improperly or not yet completely setup"
 	exit
 fi
-if [[ ! -e ../GENERAL/${site}/${site}_metadata.csv ]]; then
+if [[ ! -e ../PROTECTED/${site}/${site}_metadata.csv ]]; then
 	echo "ERROR: site ${site} missing necessary subject enrollment metadata"
 	exit
 fi

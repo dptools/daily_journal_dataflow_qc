@@ -12,7 +12,7 @@ import numpy as np
 def mindlamp_json_accounting(data_root, site, subject, assumed_timezone, assumed_language="ENGLISH"):
 	# start by obtaining valid consent date for input subject ID
 	try:
-		study_metadata_path = os.path.join(data_root,"GENERAL",site,site + "_metadata.csv")
+		study_metadata_path = os.path.join(data_root,"PROTECTED",site,site + "_metadata.csv")
 		study_metadata = pd.read_csv(study_metadata_path)
 		patient_metadata = study_metadata[study_metadata["Subject ID"] == subject]
 		consent_date_str = patient_metadata["Consent"].tolist()[0]
